@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Mai Nguyên Hoàng - Frontend Developer</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+		/>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+		<style>
+			:root {
+				--bg-color: #ffffff;
+				--text-color: #333333;
+				--card-bg: #f8f9fa;
+				--list-item-bg: #ffffff;
+				--list-item-color: #333333;
+				--navbar-bg: #f8f9fa;
+				--navbar-color: #333333;
+				--footer-text-color: #6c757d;
+			}
+
+			.dark-mode {
+				--bg-color: #333333;
+				--text-color: #ffffff;
+				--card-bg: #444444;
+				--list-item-bg: #444444;
+				--list-item-color: #ffffff;
+				--navbar-bg: #222222;
+				--navbar-color: #ffffff;
+				--footer-text-color: #b0b0b0;
+			}
+
+			body {
+				background-color: var(--bg-color);
+				color: var(--text-color);
+			}
+
+			.card {
+				background-color: var(--card-bg);
+				color: var(--text-color);
+			}
+
+			.list-group-item {
+				background-color: var(--list-item-bg);
+				color: var(--list-item-color);
+			}
+
+			.navbar {
+				background-color: var(--navbar-bg);
+				display: flex;
+				align-items: center;
+			}
+
+			.navbar-light .nav-link,
+			.navbar-light .navbar-brand,
+			.navbar-light .navbar-toggler-icon {
+				color: var(--navbar-color);
+			}
+			.navbar-nav {
+				display: flex;
+				align-items: center;
+				justify-content: right;
+				width: 100%;
+			}
+
+			.navbar-toggler {
+				border-color: var(--navbar-color);
+			}
+
+			.navbar-toggler-icon {
+				background-image: none !important;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.navbar-toggler-icon::after {
+				content: "\F479";
+				font-family: bootstrap-icons !important;
+				font-size: 1.5rem;
+			}
+
+			.btn-primary {
+				background-color: #007bff;
+				border-color: #007bff;
+			}
+
+			.btn-primary:hover {
+				background-color: #0056b3;
+				border-color: #0056b3;
+			}
+
+			.blockquote-footer {
+				color: var(--footer-text-color);
+			}
+
+			#darkModeToggle {
+				background: none;
+				border: none;
+				color: var(--navbar-color);
+				font-size: 1.5rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-light">
+			<div class="container">
+				<a class="navbar-brand d-flex align-items-center" href="#">
+					<img src="icon.png" alt="Icon" width="50" height="50" class="me-2" />
+					<h1 class="h5 mb-0">Mai Nguyên Hoàng</h1>
+				</a>
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarNav"
+					aria-controls="navbarNav"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="#home">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#projects">Projects</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#experience">Experience</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#education">Education</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#contact">Contact</a>
+						</li>
+						<li class="nav-item">
+							<button id="darkModeToggle" class="nav-link">
+								<i class="bi bi-moon"></i>
+							</button>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container mt-5">
+			<section id="home">
+				<h2 class="display-4 mb-4">Frontend Developer</h2>
+			</section>
+
+			<section id="projects" class="mb-5">
+				<h3>Projects</h3>
+				<ul class="list-group">
+					<li class="list-group-item">HTML Only Portfolio</li>
+					<li class="list-group-item">Calculator</li>
+					<li class="list-group-item">Quiz App</li>
+					<li class="list-group-item">Countdown Timer</li>
+					<li class="list-group-item">Product Upcoming Page</li>
+				</ul>
+			</section>
+
+			<section id="experience" class="mb-5">
+				<h3>Work Experience</h3>
+				<div class="card mb-3">
+					<div class="card-body">
+						<h4 class="card-title">roadmap.sh</h4>
+						<p class="card-text">Solved all the frontend projects</p>
+						<a href="#" class="btn btn-primary">Visit my Profile</a>
+					</div>
+				</div>
+				<div class="card mb-3">
+					<div class="card-body">
+						<h4 class="card-title">OpenSource Work</h4>
+						<p class="card-text">
+							Contributed to 50 opensource projects. Made my own projects with 200 GitHub Stars.
+						</p>
+						<a href="#" class="btn btn-primary">Visit my GitHub Profile</a>
+					</div>
+				</div>
+			</section>
+
+			<section id="education" class="mb-5">
+				<h3>Education</h3>
+				<p>Graduated with 3.76 out of 4 CGPA. Won Acme Hackathon. Organized 30 sessions.</p>
+				<h4>Courses I took:</h4>
+				<ul class="list-group">
+					<li class="list-group-item">Object Oriented Programming</li>
+					<li class="list-group-item">Data Structures and Algorithms</li>
+					<li class="list-group-item">Web Engineering</li>
+					<li class="list-group-item">Artificial Intelligence</li>
+					<li class="list-group-item">Human Computer Interaction</li>
+					<li class="list-group-item">Computer Graphics</li>
+					<li class="list-group-item">Database Management Systems</li>
+					<li class="list-group-item">Distributed Database Systems</li>
+					<li class="list-group-item">Discreet Mathematics</li>
+				</ul>
+			</section>
+
+			<section id="reviews" class="mb-5">
+				<h3>Reviews from my Teachers</h3>
+				<div class="card mb-3">
+					<div class="card-body">
+						<p class="card-text">
+							John doe was a brilliant student; always stood out with his assignments.
+						</p>
+						<footer class="blockquote-footer">John Doe, Assistant Professor</footer>
+					</div>
+				</div>
+				<div class="card mb-3">
+					<div class="card-body">
+						<p class="card-text">
+							John doe was a brilliant student; always stood out with his assignments.
+						</p>
+						<footer class="blockquote-footer">John Doe, Assistant Professor</footer>
+					</div>
+				</div>
+				<div class="card mb-3">
+					<div class="card-body">
+						<p class="card-text">
+							John doe was a brilliant student; always stood out with his assignments.
+						</p>
+						<footer class="blockquote-footer">John Doe, Assistant Professor</footer>
+					</div>
+				</div>
+			</section>
+
+			<section id="contact" class="mb-5">
+				<h3>Contact Me</h3>
+				<form>
+					<div class="mb-3">
+						<label for="name" class="form-label">Name</label>
+						<input type="text" class="form-control" id="name" required />
+					</div>
+					<div class="mb-3">
+						<label for="email" class="form-label">Email</label>
+						<input type="email" class="form-control" id="email" required />
+					</div>
+					<div class="mb-3">
+						<label for="message" class="form-label">Message</label>
+						<textarea class="form-control" id="message" rows="3" required></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">Send Message</button>
+				</form>
+			</section>
+		</div>
+
+		<footer class="text-center py-3 mt-5">
+			<p>© all rights reserved 2025</p>
+		</footer>
+
+		<script>
+			document.getElementById("darkModeToggle").addEventListener("click", function () {
+				document.body.classList.toggle("dark-mode");
+				this.querySelector("i").classList.toggle("bi-moon");
+				this.querySelector("i").classList.toggle("bi-sun");
+			});
+		</script>
+	</body>
+</html>
