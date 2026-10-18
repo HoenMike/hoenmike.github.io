@@ -1,272 +1,148 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Mai Nguyên Hoàng - Frontend Developer</title>
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
-		/>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-		<style>
-			:root {
-				--bg-color: #ffffff;
-				--text-color: #333333;
-				--card-bg: #f8f9fa;
-				--list-item-bg: #ffffff;
-				--list-item-color: #333333;
-				--navbar-bg: #f8f9fa;
-				--navbar-color: #333333;
-				--footer-text-color: #6c757d;
-			}
+<!doctype html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0f14">
+  <meta name="description" content="HoenMike — a developer's little corner of the internet. Games, AI companions, useful apps and the journey behind them.">
+  <meta property="og:title" content="HoenMike — Build things. Stay curious.">
+  <meta property="og:description" content="A collection of ideas, experiments, and projects, built with curiosity.">
+  <meta property="og:type" content="website">
+  <title>HoenMike — Build things. Stay curious.</title>
+  <link rel="icon" type="image/png" href="./icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" type="module"></script>
+</head>
+<body>
+  <div class="page-noise" aria-hidden="true"></div>
+  <div class="ambient ambient--one" aria-hidden="true"></div>
+  <div class="ambient ambient--two" aria-hidden="true"></div>
 
-			.dark-mode {
-				--bg-color: #333333;
-				--text-color: #ffffff;
-				--card-bg: #444444;
-				--list-item-bg: #444444;
-				--list-item-color: #ffffff;
-				--navbar-bg: #222222;
-				--navbar-color: #ffffff;
-				--footer-text-color: #b0b0b0;
-			}
+  <div class="site-shell">
+    <header class="site-header" id="top">
+      <a class="brand" href="#top" aria-label="HoenMike home">
+        <span class="brand__logo" aria-hidden="true"><span>h</span><span class="brand__dot"></span></span>
+        <span class="brand__wordmark">hoenmike<span class="brand__period">.</span></span>
+      </a>
+      <nav class="desktop-nav" aria-label="Primary">
+        <a href="#work" data-i18n="navWork">Projects</a>
+        <a href="#journey" data-i18n="navJourney">Journey</a>
+        <a href="#about" data-i18n="navAbout">About</a>
+      </nav>
+      <div class="header-actions">
+        <button class="header-control lang-switch" id="lang-switch" type="button" aria-label="Switch language">EN <span aria-hidden="true">↗</span></button>
+        <button class="header-control theme-switch" id="theme-switch" type="button" aria-label="Change color theme" title="Change theme">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/></svg>
+          <span class="theme-switch__label" data-i18n="themeName">Dark</span>
+        </button>
+      </div>
+    </header>
 
-			body {
-				background-color: var(--bg-color);
-				color: var(--text-color);
-			}
+    <main>
+      <section class="hero" id="about" aria-labelledby="hero-title">
+        <div class="hero__eyebrow"><span class="status-pulse" aria-hidden="true"></span><span data-i18n="heroEyebrow">Một góc nhỏ trên Internet</span><span class="hero__asterisk" aria-hidden="true">✳</span></div>
+        <div class="hero__layout">
+          <div class="hero__text">
+            <h1 id="hero-title"><span data-i18n="heroLine1">Hey, mình là</span><br><span class="hero__name">HoenMike<span class="hero__period">.</span></span></h1>
+            <p class="hero__subtitle" data-i18n="heroSubtitle">Mình thích biến những ý tưởng ngẫu hứng thành những thứ có thể dùng, chơi và khám phá.</p>
+            <div class="hero__cta">
+              <a class="button button--primary" href="#work"><span data-i18n="exploreWork">Khám phá dự án</span><span aria-hidden="true">↗</span></a>
+              <a class="button button--quiet" href="https://github.com/HoenMike" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="hero__art" aria-hidden="true">
+            <div class="art-orbit art-orbit--outer"></div>
+            <div class="art-orbit art-orbit--inner"></div>
+            <div class="art-asterisk">✳</div>
+            <div class="art-chip art-chip--top"><span class="chip-led"></span> imagination.exe</div>
+            <div class="art-chip art-chip--bottom">always building <span>↗</span></div>
+            <span class="art-star art-star--one">✦</span><span class="art-star art-star--two">✧</span>
+          </div>
+        </div>
+        <div class="hero__foot">
+          <div class="availability"><span class="availability__bullet" aria-hidden="true"></span><span data-i18n="heroFoot">Developer · Creative coder · Curious human</span></div>
+          <a href="#work" class="scroll-hint" data-i18n="scroll">Cuộn để khám phá ↓</a>
+        </div>
+      </section>
 
-			.card {
-				background-color: var(--card-bg);
-				color: var(--text-color);
-			}
+      <section class="work-section section" id="work" aria-labelledby="work-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow__line"></span><span>01 / <span data-i18n="workEyebrow">THỨ MÌNH LÀM</span></span></p>
+            <h2 id="work-title"><span data-i18n="workTitle">Selected</span> <em data-i18n="workTitleAccent">work.</em></h2>
+            <p class="section-heading__description" data-i18n="workDescription">Từ game đến AI và những công cụ nho nhỏ. Chạm vào mỗi ô để khám phá ngay tại đây.</p>
+          </div>
+          <div class="work-count"><span class="work-count__number" id="project-count">10</span><span data-i18n="projectCount">dự án được chọn</span></div>
+        </div>
+        <div class="filter-bar" id="filter-bar" role="group" aria-label="Project filter">
+          <button type="button" class="filter is-active" data-filter="all" aria-pressed="true" data-i18n="filterAll">Tất cả</button>
+          <button type="button" class="filter" data-filter="game" aria-pressed="false" data-i18n="filterGames">Games</button>
+          <button type="button" class="filter" data-filter="ai" aria-pressed="false">AI</button>
+          <button type="button" class="filter" data-filter="app" aria-pressed="false" data-i18n="filterApps">Apps & Tools</button>
+        </div>
+        <div class="bento-grid" id="project-grid" aria-live="polite"></div>
+        <p class="projects-hint"><span class="hint-sparkle">✳</span> <span data-i18n="projectsHint">Một số dự án là private — mình chỉ chia sẻ những gì có thể công khai.</span></p>
+      </section>
 
-			.list-group-item {
-				background-color: var(--list-item-bg);
-				color: var(--list-item-color);
-			}
+      <section class="journey-section section" id="journey" aria-labelledby="journey-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow__line"></span><span>02 / <span data-i18n="journeyEyebrow">HÀNH TRÌNH</span></span></p>
+            <h2 id="journey-title"><span data-i18n="journeyTitle">Still</span> <em data-i18n="journeyAccent">figuring it out.</em></h2>
+            <p class="section-heading__description" data-i18n="journeyDescription">Không phải đường thẳng. Chỉ là một chuỗi những lần tò mò, thử, sai và làm tốt hơn.</p>
+          </div>
+        </div>
+        <div class="journey-layout">
+          <div class="timeline" id="timeline"></div>
+          <aside class="experience-card">
+            <div class="experience-card__top">
+              <span class="eyebrow-small" data-i18n="experienceEyebrow">BEHIND THE SCENES</span>
+              <span class="experience-card__graphic" aria-hidden="true">✳</span>
+            </div>
+            <h3 data-i18n="experienceTitle">Things I learned by building.</h3>
+            <p data-i18n="experienceIntro">Từ bài tập đầu tiên đến sản phẩm phức tạp hơn — mỗi dự án là một bài học riêng.</p>
+            <div class="experience-list">
+              <div class="experience-item">
+                <span class="experience-item__year">2026</span>
+                <div><strong>ChillTown</strong><span data-i18n="experienceChill">Thử nghiệm game multiplayer thời gian thực</span></div>
+                <span aria-hidden="true">↗</span>
+              </div>
+              <div class="experience-item">
+                <span class="experience-item__year">2025</span>
+                <div><strong>Zinit</strong><span data-i18n="experienceZinit">Đồ án tốt nghiệp · Flutter application</span></div>
+                <span aria-hidden="true">↗</span>
+              </div>
+              <div class="experience-item">
+                <span class="experience-item__year">2023</span>
+                <div><strong>Chrome Dino</strong><span data-i18n="experienceDino">Một trong những game đầu tiên mình làm</span></div>
+                <span aria-hidden="true">↗</span>
+              </div>
+            </div>
+            <div class="experience-card__bottom"><span data-i18n="experienceFooter">Always a work in progress.</span><span>↗</span></div>
+          </aside>
+        </div>
+      </section>
 
-			.navbar {
-				background-color: var(--navbar-bg);
-				display: flex;
-				align-items: center;
-			}
+      <section class="outro-section section" aria-labelledby="outro-title">
+        <div class="outro-card">
+          <div class="outro-card__sticker" aria-hidden="true">✳</div>
+          <p class="eyebrow-small" data-i18n="outroEyebrow">THAT'S ALL FOR NOW</p>
+          <h2 id="outro-title" data-i18n="outroTitle">The best ideas usually start with “what if?”</h2>
+          <p data-i18n="outroDescription">Cảm ơn đã ghé qua góc nhỏ này. Có lẽ dự án tiếp theo đang bắt đầu ở đâu đó.</p>
+          <a class="button button--dark" href="https://github.com/HoenMike" target="_blank" rel="noopener noreferrer"><span data-i18n="findGithub">Gặp mình trên GitHub</span><span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+    </main>
 
-			.navbar-light .nav-link,
-			.navbar-light .navbar-brand,
-			.navbar-light .navbar-toggler-icon {
-				color: var(--navbar-color);
-			}
-			.navbar-nav {
-				display: flex;
-				align-items: center;
-				justify-content: right;
-				width: 100%;
-			}
-
-			.navbar-toggler {
-				border-color: var(--navbar-color);
-			}
-
-			.navbar-toggler-icon {
-				background-image: none !important;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-
-			.navbar-toggler-icon::after {
-				content: "\F479";
-				font-family: bootstrap-icons !important;
-				font-size: 1.5rem;
-			}
-
-			.btn-primary {
-				background-color: #007bff;
-				border-color: #007bff;
-			}
-
-			.btn-primary:hover {
-				background-color: #0056b3;
-				border-color: #0056b3;
-			}
-
-			.blockquote-footer {
-				color: var(--footer-text-color);
-			}
-
-			#darkModeToggle {
-				background: none;
-				border: none;
-				color: var(--navbar-color);
-				font-size: 1.5rem;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-		</style>
-	</head>
-	<body>
-		<nav class="navbar navbar-expand-lg navbar-light">
-			<div class="container">
-				<a class="navbar-brand d-flex align-items-center" href="#">
-					<img src="icon.png" alt="Icon" width="50" height="50" class="me-2" />
-					<h1 class="h5 mb-0">Mai Nguyên Hoàng</h1>
-				</a>
-				<button
-					class="navbar-toggler"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#navbarNav"
-					aria-controls="navbarNav"
-					aria-expanded="false"
-					aria-label="Toggle navigation"
-				>
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarNav">
-					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="#home">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#projects">Projects</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#experience">Experience</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#education">Education</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#contact">Contact</a>
-						</li>
-						<li class="nav-item">
-							<button id="darkModeToggle" class="nav-link">
-								<i class="bi bi-moon"></i>
-							</button>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-
-		<div class="container mt-5">
-			<section id="home">
-				<h2 class="display-4 mb-4">Frontend Developer</h2>
-			</section>
-
-			<section id="projects" class="mb-5">
-				<h3>Projects</h3>
-				<ul class="list-group">
-					<li class="list-group-item">HTML Only Portfolio</li>
-					<li class="list-group-item">Calculator</li>
-					<li class="list-group-item">Quiz App</li>
-					<li class="list-group-item">Countdown Timer</li>
-					<li class="list-group-item">Product Upcoming Page</li>
-				</ul>
-			</section>
-
-			<section id="experience" class="mb-5">
-				<h3>Work Experience</h3>
-				<div class="card mb-3">
-					<div class="card-body">
-						<h4 class="card-title">roadmap.sh</h4>
-						<p class="card-text">Solved all the frontend projects</p>
-						<a href="#" class="btn btn-primary">Visit my Profile</a>
-					</div>
-				</div>
-				<div class="card mb-3">
-					<div class="card-body">
-						<h4 class="card-title">OpenSource Work</h4>
-						<p class="card-text">
-							Contributed to 50 opensource projects. Made my own projects with 200 GitHub Stars.
-						</p>
-						<a href="#" class="btn btn-primary">Visit my GitHub Profile</a>
-					</div>
-				</div>
-			</section>
-
-			<section id="education" class="mb-5">
-				<h3>Education</h3>
-				<p>Graduated with 3.76 out of 4 CGPA. Won Acme Hackathon. Organized 30 sessions.</p>
-				<h4>Courses I took:</h4>
-				<ul class="list-group">
-					<li class="list-group-item">Object Oriented Programming</li>
-					<li class="list-group-item">Data Structures and Algorithms</li>
-					<li class="list-group-item">Web Engineering</li>
-					<li class="list-group-item">Artificial Intelligence</li>
-					<li class="list-group-item">Human Computer Interaction</li>
-					<li class="list-group-item">Computer Graphics</li>
-					<li class="list-group-item">Database Management Systems</li>
-					<li class="list-group-item">Distributed Database Systems</li>
-					<li class="list-group-item">Discreet Mathematics</li>
-				</ul>
-			</section>
-
-			<section id="reviews" class="mb-5">
-				<h3>Reviews from my Teachers</h3>
-				<div class="card mb-3">
-					<div class="card-body">
-						<p class="card-text">
-							John doe was a brilliant student; always stood out with his assignments.
-						</p>
-						<footer class="blockquote-footer">John Doe, Assistant Professor</footer>
-					</div>
-				</div>
-				<div class="card mb-3">
-					<div class="card-body">
-						<p class="card-text">
-							John doe was a brilliant student; always stood out with his assignments.
-						</p>
-						<footer class="blockquote-footer">John Doe, Assistant Professor</footer>
-					</div>
-				</div>
-				<div class="card mb-3">
-					<div class="card-body">
-						<p class="card-text">
-							John doe was a brilliant student; always stood out with his assignments.
-						</p>
-						<footer class="blockquote-footer">John Doe, Assistant Professor</footer>
-					</div>
-				</div>
-			</section>
-
-			<section id="contact" class="mb-5">
-				<h3>Contact Me</h3>
-				<form>
-					<div class="mb-3">
-						<label for="name" class="form-label">Name</label>
-						<input type="text" class="form-control" id="name" required />
-					</div>
-					<div class="mb-3">
-						<label for="email" class="form-label">Email</label>
-						<input type="email" class="form-control" id="email" required />
-					</div>
-					<div class="mb-3">
-						<label for="message" class="form-label">Message</label>
-						<textarea class="form-control" id="message" rows="3" required></textarea>
-					</div>
-					<button type="submit" class="btn btn-primary">Send Message</button>
-				</form>
-			</section>
-		</div>
-
-		<footer class="text-center py-3 mt-5">
-			<p>© all rights reserved 2025</p>
-		</footer>
-
-		<script>
-			document.getElementById("darkModeToggle").addEventListener("click", function () {
-				document.body.classList.toggle("dark-mode");
-				this.querySelector("i").classList.toggle("bi-moon");
-				this.querySelector("i").classList.toggle("bi-sun");
-			});
-		</script>
-	</body>
+    <footer class="site-footer">
+      <a class="footer-brand" href="#top">hoenmike<span>.</span></a>
+      <span data-i18n="footerMade">Made with curiosity, not a template.</span>
+      <div class="footer-links"><a href="https://github.com/HoenMike" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="#top" data-i18n="backToTop">Lên đầu ↑</a></div>
+    </footer>
+  </div>
+  <noscript><p style="padding:24px;color:#fff;background:#17191d;text-align:center">This portfolio uses JavaScript for the interactive projects. <a style="color:#d1ff6b" href="https://github.com/HoenMike">See my GitHub instead.</a></p></noscript>
+</body>
 </html>
