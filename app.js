@@ -1,60 +1,69 @@
-/* Interactive portfolio: data-driven bento, View Transitions, themes and i18n.
- * Project descriptions are an explicit PUBLIC allowlist. Never fetch private GitHub metadata. */
+/* HoenMike portfolio — original public editorial allowlist preserved. No external data fetching. */
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const SETTINGS_KEY = "hoenmike-portfolio-preferences-v1";
 const themes = ["dark", "light"];
-const languageNames = { vi: "Tiếng Việt", en: "English" };
 const safeRead = () => { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"); } catch { return {}; } };
 const settings = safeRead();
 let lang = settings.lang === "en" ? "en" : "vi";
 let theme = themes.includes(settings.theme) ? settings.theme : "dark";
 let filter = "all";
 let openId = null;
-let filterTimeout = 0;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const save = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ lang, theme })); } catch { /* storage optional */ } };
+const save = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({lang,theme})); } catch { /* storage optional */ } };
 
 const copy = {
   vi: {
-    navWork:"Projects",navJourney:"Journey",navAbout:"About",heroEyebrow:"Một góc nhỏ trên Internet",
-    heroLine1:"Hey, mình là",heroSubtitle:"Mình thích biến những ý tưởng ngẫu hứng thành những thứ có thể dùng, chơi và khám phá.",
-    exploreWork:"Khám phá dự án",heroFoot:"Developer · Creative coder · Curious human",scroll:"Cuộn để khám phá ↓",
-    workEyebrow:"THỨ MÌNH LÀM",workTitle:"Selected",workTitleAccent:"work.",workDescription:"Từ game đến AI và những công cụ nho nhỏ. Chạm vào mỗi ô để khám phá ngay tại đây.",
-    projectCount:"dự án được chọn",filterAll:"Tất cả",filterGames:"Games",filterApps:"Apps & Tools",
-    projectsHint:"Một số dự án là private — mình chỉ chia sẻ những gì có thể công khai.",
-    journeyEyebrow:"HÀNH TRÌNH",journeyTitle:"Still",journeyAccent:"figuring it out.",
-    journeyDescription:"Không phải đường thẳng. Chỉ là một chuỗi những lần tò mò, thử, sai và làm tốt hơn.",
-    experienceEyebrow:"BEHIND THE SCENES",experienceTitle:"Things I learned by building.",
-    experienceIntro:"Từ bài tập đầu tiên đến sản phẩm phức tạp hơn — mỗi dự án là một bài học riêng.",
-    experienceChill:"Thử nghiệm game multiplayer thời gian thực",experienceZinit:"Đồ án tốt nghiệp · Flutter application",
-    experienceDino:"Một trong những game đầu tiên mình làm",experienceFooter:"Always a work in progress.",
-    outroEyebrow:"THAT'S ALL FOR NOW",outroTitle:"The best ideas usually start with “what if?”",
-    outroDescription:"Cảm ơn đã ghé qua góc nhỏ này. Có lẽ dự án tiếp theo đang bắt đầu ở đâu đó.",
-    findGithub:"Gặp mình trên GitHub",footerMade:"Made with curiosity, not a template.",backToTop:"Lên đầu ↑",
-    details:"Tổng quan",stack:"Công nghệ",notes:"Ghi chú",demo:"Xem demo",source:"Mã nguồn",expand:"Mở rộng",collapse:"Thu gọn",
-    private:"Private project",public:"Open source",thesis:"Graduation thesis",built:"Dự án",current:"Đang phát triển",
-    themeDark:"Dark",themeLight:"Light",themeAria:"Đổi giao diện màu",
+    navWork:"Dự án",navJourney:"Hành trình",navAbout:"Giới thiệu",
+    heroRole:"DEVELOPER / CREATIVE BUILDER",heroHello:"Hey, mình là",
+    heroStatement:"Mình biến ý tưởng thành những sản phẩm số thật sự hoạt động.",
+    heroDescription:"Từ ứng dụng web, AI companion đến game và các thử nghiệm nhỏ. Mình thích xây những thứ hữu ích, dễ dùng và có một chút cá tính.",
+    exploreWork:"Khám phá dự án",heroFoot:"Code. Thử nghiệm. Cải thiện. Lặp lại.",
+    workspaceEyebrow:"TRÊN BÀN LÀM VIỆC",workspaceLive:"Đang phát triển",
+    workspaceTitle:"Đang xây dựng.",workspaceDescription:"Một vài ý tưởng vẫn đang được hoàn thiện.",
+    workspaceGarden:"Web game thư giãn",workspaceAsumi:"AI companion trên Discord",workspaceMiraei:"Second brain cá nhân",
+    stackTitle:"Công nghệ mình làm việc cùng",
+    workEyebrow:"DỰ ÁN",workTitle:"Selected",workTitleAccent:"work.",
+    workDescription:"Những ứng dụng, game và thử nghiệm mình đã làm. Chạm vào một card để xem thêm ngay tại đây.",
+    projectCount:"dự án",filterAll:"Tất cả",filterGames:"Games",filterApps:"Apps & Tools",
+    projectsHint:"Một số dự án được giữ riêng tư. Mình chỉ giới thiệu phần có thể chia sẻ công khai.",
+    journeyEyebrow:"HÀNH TRÌNH",journeyTitle:"Learning by",journeyAccent:"building.",
+    journeyDescription:"Từ những dòng code đầu tiên đến sản phẩm hoàn chỉnh hơn. Một quá trình thử, sai, học và tiến bộ.",
+    experienceEyebrow:"BÀI HỌC QUA DỰ ÁN",experienceTitle:"Học bằng cách làm.",
+    experienceIntro:"Không chỉ code chạy được, mà còn là thiết kế, trải nghiệm và cách một sản phẩm trưởng thành.",
+    experienceChill:"Thử nghiệm multiplayer thời gian thực",experienceZinit:"Đồ án tốt nghiệp · ứng dụng Flutter",
+    experienceDino:"Một trong những game đầu tiên bằng Java",
+    outroEyebrow:"TIẾP THEO LÀ GÌ?",outroTitle:"There's always something new to build.",
+    outroDescription:"Cảm ơn đã ghé thăm. Mình vẫn đang khám phá những ý tưởng mới và tiếp tục học mỗi ngày.",
+    findGithub:"Gặp mình trên GitHub",footerMade:"Built with curiosity, not a template.",backToTop:"Về đầu trang ↑",
+    details:"Tổng quan",stack:"Công nghệ",notes:"Ghi chú",demo:"Xem demo",source:"Mã nguồn",
+    expand:"Mở rộng",collapse:"Thu gọn",themeDark:"Dark",themeLight:"Light",themeAria:"Đổi giao diện"
   },
   en: {
-    navWork:"Projects",navJourney:"Journey",navAbout:"About",heroEyebrow:"A little corner of the Internet",
-    heroLine1:"Hey, I'm",heroSubtitle:"I like turning random ideas into things you can use, play with, and explore.",
-    exploreWork:"Explore my work",heroFoot:"Developer · Creative coder · Curious human",scroll:"Scroll to explore ↓",
-    workEyebrow:"THINGS I MAKE",workTitle:"Selected",workTitleAccent:"work.",workDescription:"Games, AI companions, and useful little tools. Tap a tile to expand it right here.",
-    projectCount:"selected projects",filterAll:"All",filterGames:"Games",filterApps:"Apps & Tools",
-    projectsHint:"Some projects are private — only approved, public-friendly details are shared here.",
-    journeyEyebrow:"THE JOURNEY",journeyTitle:"Still",journeyAccent:"figuring it out.",
-    journeyDescription:"It's not a straight line. Just curiosity, experiments, mistakes, and learning to build better.",
-    experienceEyebrow:"BEHIND THE SCENES",experienceTitle:"Things I learned by building.",
-    experienceIntro:"From early school projects to more ambitious work — every build taught me something.",
-    experienceChill:"Real-time multiplayer game experiment",experienceZinit:"Graduation thesis · Flutter application",
-    experienceDino:"One of the first games I ever made",experienceFooter:"Always a work in progress.",
-    outroEyebrow:"THAT'S ALL FOR NOW",outroTitle:"The best ideas usually start with “what if?”",
-    outroDescription:"Thanks for dropping by. The next idea might be taking shape somewhere already.",
-    findGithub:"Find me on GitHub",footerMade:"Made with curiosity, not a template.",backToTop:"Back to top ↑",
-    details:"Overview",stack:"Built with",notes:"Good to know",demo:"Live demo",source:"Source code",expand:"Expand",collapse:"Collapse",
-    private:"Private project",public:"Open source",thesis:"Graduation thesis",built:"Project",current:"Work in progress",
-    themeDark:"Dark",themeLight:"Light",themeAria:"Change color theme",
+    navWork:"Projects",navJourney:"Journey",navAbout:"About",
+    heroRole:"DEVELOPER / CREATIVE BUILDER",heroHello:"Hey, I'm",
+    heroStatement:"I turn ideas into digital products that actually work.",
+    heroDescription:"From web applications and AI companions to games and playful experiments. I enjoy building things that are useful, approachable, and a little different.",
+    exploreWork:"Explore my work",heroFoot:"Build. Experiment. Improve. Repeat.",
+    workspaceEyebrow:"ON MY DESK",workspaceLive:"In progress",
+    workspaceTitle:"Currently building.",workspaceDescription:"A few ideas taking shape right now.",
+    workspaceGarden:"Cozy browser game",workspaceAsumi:"Discord AI companion",workspaceMiraei:"Personal second brain",
+    stackTitle:"Technologies I work with",
+    workEyebrow:"PROJECTS",workTitle:"Selected",workTitleAccent:"work.",
+    workDescription:"Web apps, games and experiments I've built. Open any card to learn more without leaving the page.",
+    projectCount:"projects",filterAll:"All",filterGames:"Games",filterApps:"Apps & Tools",
+    projectsHint:"Some projects are private. Only public-safe information is displayed here.",
+    journeyEyebrow:"THE JOURNEY",journeyTitle:"Learning by",journeyAccent:"building.",
+    journeyDescription:"From the first lines of code to more complete products. A process of experimenting, learning and improving.",
+    experienceEyebrow:"LESSONS FROM BUILDING",experienceTitle:"Learning by doing.",
+    experienceIntro:"Beyond working code: design, experience, and seeing a product come together.",
+    experienceChill:"Real-time multiplayer experiment",experienceZinit:"Graduation thesis · Flutter application",
+    experienceDino:"An early Java game project",
+    outroEyebrow:"WHAT'S NEXT?",outroTitle:"There's always something new to build.",
+    outroDescription:"Thanks for visiting. I'm still exploring new ideas and learning along the way.",
+    findGithub:"Find me on GitHub",footerMade:"Built with curiosity, not a template.",backToTop:"Back to top ↑",
+    details:"Overview",stack:"Built with",notes:"Notes",demo:"Live demo",source:"Source code",
+    expand:"Expand",collapse:"Collapse",themeDark:"Dark",themeLight:"Light",themeAria:"Change theme"
   }
 };
 
@@ -143,110 +152,6 @@ const projects = [
     note:{vi:"Prototype chưa hoàn thiện — chia sẻ như một thử nghiệm kỹ thuật.",en:"An incomplete prototype, showcased as a technical experiment."}
   }
 ];
-
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-const localized = (entry) => typeof entry === "string" ? entry : (entry?.[lang] || "");
-const trustedExternal = (url) => typeof url === "string" && url.startsWith("https://");
-function renderOne(project, index) {
-  const c = copy[lang];
-  const year = esc(project.year);
-  const id = esc(project.id);
-  const source = project.visibility === "public" && trustedExternal(project.source)
-    ? '<a class="detail-link" href="' + esc(project.source) + '" target="_blank" rel="noopener noreferrer">' + esc(c.source) + ' ↗</a>' : "";
-  const demo = trustedExternal(project.demo)
-    ? '<a class="detail-link detail-link--primary" href="' + esc(project.demo) + '" target="_blank" rel="noopener noreferrer">' + esc(c.demo) + ' ↗</a>' : "";
-  const badges = project.tech.map((t) => '<span class="detail-tag">' + esc(t) + '</span>').join("");
-  const number = String(projects.indexOf(project) + 1).padStart(2, "0");
-  return '<article class="tile tile--' + esc(project.size) + ' tile--' + id + '" data-id="' + id + '" data-kind="' + esc(project.kind) + '">' +
-    '<button class="tile__trigger" type="button" aria-expanded="false" aria-controls="detail-' + id + '" aria-label="' + esc(c.expand + " " + project.title) + '">' +
-      
-      '<div class="tile__top"><span class="tile__number">' + number + ' / ' + year + '</span><span class="tile__arrow" aria-hidden="true">↗</span></div>' +
-      '<div class="tile__bottom"><p class="tile__category">' + esc(localized(project.category)) + '</p><h3 class="tile__title">' + esc(project.title) + '</h3><p class="tile__subtitle">' + esc(localized(project.tagline)) + '</p></div>' +
-    '</button>' +
-    '<div class="tile__detail" id="detail-' + id + '" hidden role="region" aria-label="' + esc(project.title + " " + c.details) + '">' +
-      '<div class="tile__detail-grid"><div><span class="detail-label">' + esc(c.details) + '</span><p class="detail-copy">' + esc(localized(project.description)) + '</p></div>' +
-      '<div><span class="detail-label">' + esc(c.stack) + '</span><div class="detail-tags">' + badges + '</div></div>' +
-      '<div><span class="detail-label">' + esc(c.notes) + '</span><p class="detail-note">' + esc(localized(project.note)) + '</p></div></div>' +
-      (demo || source ? '<div class="detail-footer">' + demo + source + '</div>' : "") +
-    '</div>' +
-  '</article>';
-}
-function applyTranslations() {
-  document.documentElement.lang = lang;
-  $$("[data-i18n]").forEach((el) => {
-    const key = el.dataset.i18n;
-    if (Object.prototype.hasOwnProperty.call(copy[lang], key)) el.textContent = copy[lang][key];
-  });
-  $("#lang-switch").innerHTML = (lang === "vi" ? 'EN <span aria-hidden="true">↗</span>' : 'VI <span aria-hidden="true">↗</span>');
-  $("#lang-switch").setAttribute("aria-label", lang === "vi" ? "Switch to English" : "Chuyển sang tiếng Việt");
-  $("#filter-bar").setAttribute("aria-label", lang === "vi" ? "Lọc dự án" : "Filter projects");
-  applyTheme();
-}
-function applyTheme() {
-  document.documentElement.dataset.theme = theme;
-  const meta = $('meta[name="theme-color"]');
-  if (meta) meta.content = theme === "light" ? "#f4f4ee" : "#0d0f14";
-  const label = theme === "light" ? copy[lang].themeLight : copy[lang].themeDark;
-  $(".theme-switch__label").textContent = label;
-  $("#theme-switch").setAttribute("aria-label", copy[lang].themeAria + ": " + label);
-  $("#theme-switch").title = label;
-  window.dispatchEvent(new Event("ocean-themechange"));
-}
-function syncTiles() {
-  $$("[data-id]", $("#project-grid")).forEach((el) => {
-    const expanded = el.dataset.id === openId;
-    el.classList.toggle("is-expanded", expanded);
-    const button = $(".tile__trigger", el);
-    button.setAttribute("aria-expanded", String(expanded));
-    button.setAttribute("aria-label", (expanded ? copy[lang].collapse : copy[lang].expand) + " " + $(".tile__title", el).textContent);
-    $(".tile__detail", el).hidden = !expanded;
-  });
-}
-function updateLayout(mutate) {
-  if (document.startViewTransition && !reduceMotion.matches && window.innerWidth > 620) {
-    document.startViewTransition(mutate);
-  } else mutate();
-}
-function renderProjects() {
-  const selected = projects.filter((p) => filter === "all" || p.kind === filter);
-  $("#project-grid").innerHTML = selected.map(renderOne).join("");
-  $("#project-count").textContent = String(selected.length).padStart(2,"0");
-  syncTiles();
-  window.oceanRevealRefresh?.();
-  $(".tile__trigger", $("#project-grid")).forEach((trigger) => {
-    trigger.addEventListener("click", () => {
-      const id = trigger.closest(".tile").dataset.id;
-      updateLayout(() => { openId = openId === id ? null : id; syncTiles(); });
-    });
-  });
-  const precise = window.matchMedia("(hover: hover) and (pointer: fine)");
-  $(".tile", $("#project-grid")).forEach(tile => {
-    let pending = 0, pointerX = 0, pointerY = 0;
-    const move = () => {
-      pending = 0;
-      if (!precise.matches || reduceMotion.matches) return;
-      const rect=tile.getBoundingClientRect();
-      const x=(pointerX-rect.left)/rect.width,y=(pointerY-rect.top)/rect.height;
-      tile.style.setProperty("--mx",(x*100).toFixed(1)+"%");
-      tile.style.setProperty("--my",(y*100).toFixed(1)+"%");
-      tile.style.setProperty("--rotate-x",((.5-y)*5.5).toFixed(2)+"deg");
-      tile.style.setProperty("--rotate-y",((x-.5)*5.5).toFixed(2)+"deg");
-    };
-    tile.addEventListener("pointermove",event => {
-      if (event.pointerType === "touch" || !precise.matches || reduceMotion.matches) return;
-      pointerX=event.clientX;pointerY=event.clientY;
-      if(!pending)pending=requestAnimationFrame(move);
-    },{passive:true});
-    const reset=() => {
-      if(pending)cancelAnimationFrame(pending);
-      pending=0;
-      tile.style.setProperty("--rotate-x","0deg");
-      tile.style.setProperty("--rotate-y","0deg");
-    };
-    tile.addEventListener("pointerleave",reset);
-    $(".tile__trigger",tile).addEventListener("click",reset);
-  });
-}
 const timeline = [
   {year:"2023",title:{vi:"Chơi mà học",en:"Learning by playing"},body:{vi:"Những dòng Java đầu tiên, game Chrome Dino và niềm vui khi tự làm được thứ gì đó chạy thật.",en:"First Java projects, a Chrome Dino clone, and the excitement of making something actually run."},tags:["Java","OOP","Games"]},
   {year:"2024",title:{vi:"Thử mọi thứ có thể",en:"Exploring everything"},body:{vi:"Từ ứng dụng web đến phần cứng và các bài toán lập trình. Giai đoạn thử nhiều để tìm thứ mình thích làm.",en:"From web applications to hardware experiments and programming challenges — a year of trying things to find what I loved."},tags:["Web","Embedded","Experiments"]},
@@ -254,249 +159,176 @@ const timeline = [
   {year:"2026",title:{vi:"Thử những ý tưởng lớn hơn",en:"Thinking bigger"},body:{vi:"Khám phá AI companion, game web, ứng dụng hữu ích và thử nghiệm multiplayer với ChillTown.",en:"Exploring AI companions, cozy browser games, practical apps and multiplayer experiments like ChillTown."},tags:["Asumi","Miraei","Living Garden"]},
   {year:"NOW",title:{vi:"Vẫn tiếp tục xây dựng",en:"Still building"},body:{vi:"Mỗi dự án là một lần thử cái mới. Mình vẫn đang học, cải thiện và biến ý tưởng thành trải nghiệm.",en:"Every project is a chance to learn something new, improve, and turn curiosity into experiences people can use."},tags:["Curiosity","Keep shipping"]}
 ];
-function renderTimeline() {
-  $("#timeline").innerHTML = timeline.map((item) =>
-    '<div class="timeline-item"><div class="timeline-item__year">' + esc(item.year) +
-    '</div><h3>' + esc(localized(item.title)) + '</h3><p>' + esc(localized(item.body)) +
-    '</p><div class="timeline-item__tags">' + item.tags.map((t) => '<span>' + esc(t) + '</span>').join("") +
-    '</div></div>'
-  ).join("");
-  window.oceanRevealRefresh?.();
-}
 
-$("#lang-switch").addEventListener("click", () => {
-  clearTimeout(filterTimeout);
-  filterTimeout = 0;
-  lang = lang === "vi" ? "en" : "vi";
-  save();
-  applyTranslations();
-  renderProjects();
-  renderTimeline();
+/* Small product-related vector marks, not fake screenshots or internal project details. */
+const symbols = {
+  garden:'<rect x="8" y="8" width="18" height="18" rx="4"/><rect x="34" y="8" width="18" height="18" rx="4"/><rect x="8" y="34" width="18" height="18" rx="4"/><rect x="34" y="34" width="18" height="18" rx="4"/><path d="M43 44V18m0 14-6-6m6-2 6-6"/>',
+  asumi:'<path d="M10 13h44v29H31L20 52v-10H10z"/><path d="M20 25h23m-23 9h15"/>',
+  miraei:'<circle cx="13" cy="32" r="6"/><circle cx="49" cy="15" r="6"/><circle cx="49" cy="49" r="6"/><path d="M19 32h11l13-17M30 32l13 17"/>',
+  sc:'<rect x="12" y="12" width="40" height="40" rx="12"/><circle cx="32" cy="32" r="10"/><path d="M32 7v5m0 40v5M7 32h5m40 0h5"/>',
+  clock:'<circle cx="32" cy="32" r="22"/><path d="M32 17v15l11 7"/>',
+  alpha:'<rect x="9" y="31" width="9" height="23" rx="2"/><rect x="27" y="19" width="9" height="35" rx="2"/><rect x="45" y="10" width="9" height="44" rx="2"/>',
+  zinit:'<path d="M11 13h42v39H11zM20 25l4 4 7-8m7 5h9M20 41l4 4 7-8m7 5h9"/>',
+  elo:'<path d="M32 7l6 16 17 1-13 11 4 17-14-9-14 9 4-17L9 24l17-1z"/>',
+  dino:'<path d="M16 43V24h10V13h22v10h7v11H42v10h-9v9h-8v-9zm0-6H8m30-15h2"/>',
+  tak:'<path d="M22 10v44M42 10v44M10 22h44M10 42h44"/><circle cx="17" cy="16" r="4"/><circle cx="47" cy="48" r="4"/><path d="m27 27 10 10m0-10L27 37"/>'
+};
+const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const localized = (value) => typeof value === "string" ? value : (value?.[lang] || "");
+const trustedExternal = (url) => typeof url === "string" && /^https:\/\//.test(url);
+const grid = $("#project-grid");
+
+function renderOne(project) {
+  const c = copy[lang],id = esc(project.id);
+  const number = String(projects.indexOf(project)+1).padStart(2,"0");
+  const source = project.visibility === "public" && trustedExternal(project.source)
+    ? '<a class="detail-link" href="'+esc(project.source)+'" target="_blank" rel="noopener noreferrer">'+esc(c.source)+' ↗</a>' : "";
+  const demo = trustedExternal(project.demo)
+    ? '<a class="detail-link detail-link--primary" href="'+esc(project.demo)+'" target="_blank" rel="noopener noreferrer">'+esc(c.demo)+' ↗</a>' : "";
+  const artwork = '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">'+symbols[project.id]+'</svg>';
+  return '<article class="tile tile--'+esc(project.size)+' tile--'+id+'" data-id="'+id+'" data-kind="'+esc(project.kind)+'">'+
+    '<button type="button" class="tile__trigger" aria-expanded="false" aria-controls="detail-'+id+'" aria-label="'+esc(c.expand+" "+project.title)+'">'+
+      '<div class="tile__visual" aria-hidden="true">'+artwork+'</div>'+
+      '<div class="tile__top"><span class="tile__number">'+number+' / 10</span><span class="tile__year">'+esc(project.year)+'</span><span class="tile__arrow" aria-hidden="true">↗</span></div>'+
+      '<div class="tile__content"><p class="tile__category">'+esc(localized(project.category))+'</p><h3 class="tile__title">'+esc(project.title)+'</h3><p class="tile__subtitle">'+esc(localized(project.tagline))+'</p>'+
+      '<div class="tile__tech" aria-hidden="true">'+project.tech.slice(0,2).map(tag => '<span>'+esc(tag)+'</span>').join("")+'</div></div>'+
+    '</button>'+
+    '<div class="tile__detail" id="detail-'+id+'" role="region" aria-label="'+esc(project.title+" "+c.details)+'" hidden>'+
+      '<div class="tile__detail-grid"><div><span class="detail-label">'+esc(c.details)+'</span><p class="detail-copy">'+esc(localized(project.description))+'</p></div>'+
+      '<div><span class="detail-label">'+esc(c.stack)+'</span><div class="detail-tags">'+project.tech.map(tag => '<span class="detail-tag">'+esc(tag)+'</span>').join("")+'</div></div>'+
+      '<div><span class="detail-label">'+esc(c.notes)+'</span><p class="detail-note">'+esc(localized(project.note))+'</p></div></div>'+
+      (demo||source?'<div class="detail-footer">'+demo+source+'</div>':"")+
+    '</div></article>';
+}
+function syncTiles() {
+  $$("[data-id]",grid).forEach(tile => {
+    const expanded=tile.dataset.id===openId;
+    tile.classList.toggle("is-expanded",expanded);
+    const button=$(".tile__trigger",tile);
+    button.setAttribute("aria-expanded",String(expanded));
+    button.setAttribute("aria-label",(expanded?copy[lang].collapse:copy[lang].expand)+" "+$(".tile__title",tile).textContent);
+    $(".tile__detail",tile).hidden=!expanded;
+  });
+}
+function updateLayout(mutate) {
+  if(document.startViewTransition && !reduceMotion.matches && window.innerWidth>900) {
+    const transition=document.startViewTransition(mutate);
+    return transition.finished.catch(()=>{});
+  }
+  mutate();
+  return Promise.resolve();
+}
+function renderProjects() {
+  const shown=projects.filter(project=>filter==="all"||project.kind===filter);
+  grid.innerHTML=shown.map(renderOne).join("");
+  $("#project-count").textContent=String(shown.length).padStart(2,"0");
+  syncTiles();
+}
+function renderTimeline() {
+  $("#timeline").innerHTML=timeline.map(item =>
+    '<div class="timeline-item"><div class="timeline-item__year">'+esc(item.year)+'</div>'+
+    '<h3>'+esc(localized(item.title))+'</h3><p>'+esc(localized(item.body))+'</p>'+
+    '<div class="timeline-item__tags">'+item.tags.map(t => '<span>'+esc(t)+'</span>').join("")+'</div></div>'
+  ).join("");
+}
+function translate() {
+  document.documentElement.lang=lang;
+  $$("[data-i18n]").forEach(el=>{
+    const key=el.dataset.i18n;
+    if(Object.prototype.hasOwnProperty.call(copy[lang],key))el.textContent=copy[lang][key];
+  });
+  $("#lang-switch").textContent=lang==="vi"?"EN":"VI";
+  $("#lang-switch").setAttribute("aria-label",lang==="vi"?"Switch to English":"Chuyển sang Tiếng Việt");
+  $("#filter-bar").setAttribute("aria-label",lang==="vi"?"Lọc dự án":"Filter projects");
+}
+function applyTheme() {
+  document.documentElement.dataset.theme=theme;
+  const meta=$('meta[name="theme-color"]');
+  if(meta)meta.content=theme==="light"?"#f1f6fa":"#08111d";
+  $(".theme-switch__label").textContent=theme==="light"?copy[lang].themeLight:copy[lang].themeDark;
+  $("#theme-switch").setAttribute("aria-label",copy[lang].themeAria);
+}
+function updateFilters() {
+  $$(".filter").forEach(button=>{
+    const active=button.dataset.filter===filter;
+    button.classList.toggle("is-active",active);
+    button.setAttribute("aria-pressed",String(active));
+  });
+}
+function openProject(id) {
+  if(!projects.some(project=>project.id===id))return;
+  const mutate=()=>{
+    filter="all";openId=id;
+    updateFilters();
+    renderProjects();
+  };
+  updateLayout(mutate).then(()=>{
+    const tile=$('[data-id="'+id+'"]',grid);
+    if(!tile)return;
+    tile.scrollIntoView({behavior:reduceMotion.matches?"instant":"smooth",block:"center"});
+    $(".tile__trigger",tile)?.focus({preventScroll:true});
+  });
+}
+$("#lang-switch").addEventListener("click",()=>{
+  const focusedId=document.activeElement?.closest?.("[data-id]")?.dataset.id;
+  lang=lang==="vi"?"en":"vi";
+  save();translate();applyTheme();renderProjects();renderTimeline();
+  if(focusedId) $('[data-id="'+focusedId+'"] .tile__trigger',grid)?.focus({preventScroll:true});
 });
-$("#theme-switch").addEventListener("click", () => {
-  theme = themes[(themes.indexOf(theme) + 1) % themes.length];
-  save();
-  applyTheme();
+$("#theme-switch").addEventListener("click",()=>{
+  theme=themes[(themes.indexOf(theme)+1)%themes.length];
+  save();applyTheme();
 });
-function filterProjects(next) {
-  if (next === filter && !filterTimeout) return;
-  if (filterTimeout) clearTimeout(filterTimeout);
-  filterTimeout=0;
-  const outgoing=$(".tile",$("#project-grid"));
-  outgoing.forEach(tile => tile.classList.toggle("is-filter-leaving",next!=="all" && tile.dataset.kind!==next));
-  const commit=() => {
-    filterTimeout=0;
-    updateLayout(() => {
-      filter=next;
-      openId=null;
-      $(".filter").forEach(button => {
-        const active=button.dataset.filter===filter;
-        button.classList.toggle("is-active",active);
-        button.setAttribute("aria-pressed",String(active));
-      });
-      renderProjects();
+$$(".filter").forEach(button=>button.addEventListener("click",()=>{
+  if(button.dataset.filter===filter)return;
+  updateLayout(()=>{
+    filter=button.dataset.filter;openId=null;
+    updateFilters();renderProjects();
+  });
+}));
+grid.addEventListener("click",event=>{
+  const button=event.target.closest(".tile__trigger");
+  if(!button||!grid.contains(button))return;
+  const id=button.closest(".tile").dataset.id;
+  updateLayout(()=>{openId=openId===id?null:id;syncTiles();});
+});
+$$("[data-open-project]").forEach(button=>button.addEventListener("click",()=>openProject(button.dataset.openProject)));
+document.addEventListener("keydown",event=>{
+  if(event.key==="Escape"&&openId){
+    const closing=openId;
+    updateLayout(()=>{openId=null;syncTiles();}).then(()=>{
+      $('[data-id="'+closing+'"] .tile__trigger',grid)?.focus({preventScroll:true});
     });
-  };
-  if (reduceMotion.matches) commit();
-  else filterTimeout=setTimeout(commit,165);
-}
-$(".filter").forEach(button => {
-  button.addEventListener("click",() => filterProjects(button.dataset.filter));
-});
-function initMagneticButton() {
-  const button=$(".hero__cta .button--primary"),area=$(".hero__cta");
-  const precise=window.matchMedia("(hover: hover) and (pointer: fine)");
-  if(!button || !area)return;
-  let frame=0,dx=0,dy=0;
-  const apply=() => {
-    frame=0;
-    button.style.transform=reduceMotion.matches ? "" : "translate3d("+dx.toFixed(1)+"px,"+dy.toFixed(1)+"px,0)";
-  };
-  area.addEventListener("pointermove",event => {
-    if(!precise.matches || reduceMotion.matches)return;
-    const rect=button.getBoundingClientRect();
-    const centerX=rect.left+rect.width/2,centerY=rect.top+rect.height/2;
-    const near=Math.abs(event.clientX-centerX)<rect.width/2+45 && Math.abs(event.clientY-centerY)<rect.height/2+45;
-    dx=near ? Math.max(-7,Math.min(7,(event.clientX-centerX)*.09)):0;
-    dy=near ? Math.max(-5,Math.min(5,(event.clientY-centerY)*.09)):0;
-    if(!frame)frame=requestAnimationFrame(apply);
-  },{passive:true});
-  area.addEventListener("pointerleave",()=>{dx=0;dy=0;if(!frame)frame=requestAnimationFrame(apply)});
-  if(reduceMotion.addEventListener)reduceMotion.addEventListener("change",()=>{dx=0;dy=0;apply()});
-}
-initMagneticButton();
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && openId !== null) {
-    updateLayout(() => { openId = null; syncTiles(); });
   }
 });
-applyTranslations();
+translate();
+applyTheme();
 renderProjects();
 renderTimeline();
 
-/* One fixed canvas, only active while the hero is in view. */
-function initOceanAtmosphere() {
-  const canvas = $("#starfield");
-  const hero = $(".hero");
-  if (!canvas || !hero) return;
-  const ctx = canvas.getContext("2d", { alpha:true });
-  if (!ctx) return;
-  const mobile = window.matchMedia("(max-width: 600px)");
-  let width = 0, height = 0, stars = [], frame = 0, heroVisible = true, lastTime = 0;
-  let nextMeteor = 0, meteor = null;
-  const random = (a,b) => a + Math.random()*(b-a);
-  const allowed = () => document.visibilityState === "visible" && theme === "dark" && heroVisible;
-  function setup() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(width*dpr);
-    canvas.height = Math.round(height*dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    stars = Array.from({length:mobile.matches ? 60 : 160}, () => ({
-      x:random(0,width), y:random(0,height*.79),
-      radius:random(.4,1.3), opacity:random(.17,.66),
-      speed:random(.00045,.0018), phase:random(0,Math.PI*2)
-    }));
-    nextMeteor = performance.now() + random(10000,15000);
-    draw(performance.now(),true);
-    start();
-  }
-  function draw(now,staticOnly=false) {
-    ctx.clearRect(0,0,width,height);
-    for (const star of stars) {
-      const shimmer = staticOnly || reduceMotion.matches ? 0 : .24*Math.sin(now*star.speed+star.phase);
-      ctx.globalAlpha = Math.max(.08,Math.min(.95,star.opacity+shimmer));
-      ctx.fillStyle = "#e8f7ff";
-      ctx.beginPath();
-      ctx.arc(star.x,star.y,star.radius,0,Math.PI*2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    if (staticOnly || reduceMotion.matches) return;
-    if (!meteor && now >= nextMeteor) {
-      meteor = { start:now,x:random(width*.18,width*.85),y:random(height*.05,height*.38) };
-      nextMeteor = now + random(10000,15000);
-    }
-    if (meteor) {
-      const t=(now-meteor.start)/750;
-      if(t>=1) meteor=null;
-      else {
-        const x=meteor.x+t*95,y=meteor.y+t*57;
-        ctx.globalAlpha=Math.sin(Math.PI*t)*.66;
-        ctx.lineWidth=1.2;
-        ctx.strokeStyle="#bdeeff";
-        ctx.beginPath();ctx.moveTo(x-42*t,y-23*t);ctx.lineTo(x,y);ctx.stroke();
-        ctx.globalAlpha=1;
-      }
-    }
-  }
-  function tick(now) {
-    frame=0;
-    if (!allowed() || reduceMotion.matches) return;
-    if (now-lastTime >= 30) { draw(now);lastTime=now; }
-    frame=requestAnimationFrame(tick);
-  }
-  function stop() { if(frame) cancelAnimationFrame(frame);frame=0; }
-  function start() {
-    if (!allowed() || frame) return;
-    if (reduceMotion.matches) { draw(performance.now(),true);return; }
-    lastTime=0;
-    nextMeteor=performance.now()+random(10000,15000);
-    frame=requestAnimationFrame(tick);
-  }
-  function refresh() { stop();if(allowed())start(); }
-  const observer = new IntersectionObserver(entries => {
-    heroVisible=entries[0].isIntersecting;
-    refresh();
-  },{rootMargin:"80px"});
-  observer.observe(hero);
-  document.addEventListener("visibilitychange",refresh);
-  window.addEventListener("ocean-themechange",refresh);
-  window.addEventListener("resize",setup,{passive:true});
-  if (mobile.addEventListener) mobile.addEventListener("change",setup);
-  if (reduceMotion.addEventListener) reduceMotion.addEventListener("change",refresh);
-  setup();
-}
-initOceanAtmosphere();
-
-function initHeroParallax() {
-  const hero = $(".hero");
-  if (!hero) return;
-  const precisePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-  let scheduled = 0,px = 0,py = 0;
-  const apply = () => {
-    scheduled=0;
-    if (reduceMotion.matches) { hero.style.removeProperty("--hero-px");hero.style.removeProperty("--hero-py");return; }
-    hero.style.setProperty("--hero-px",px.toFixed(1)+"px");
-    hero.style.setProperty("--hero-py",py.toFixed(1)+"px");
-  };
-  const schedule = () => { if (!scheduled) scheduled=requestAnimationFrame(apply); };
-  hero.addEventListener("pointermove",event => {
-    if (!precisePointer.matches || reduceMotion.matches) return;
-    const rect=hero.getBoundingClientRect();
-    px=((event.clientX-rect.left)/rect.width-.5)*18;
-    py=((event.clientY-rect.top)/rect.height-.5)*12;
-    schedule();
-  },{passive:true});
-  hero.addEventListener("pointerleave",() => { px=0;py=0;schedule(); });
-  window.addEventListener("scroll",() => {
-    if (precisePointer.matches || reduceMotion.matches) return;
-    const rect=hero.getBoundingClientRect();
-    if(rect.bottom<0 || rect.top>window.innerHeight)return;
-    px=0;py=Math.max(-10,Math.min(10,-rect.top*.035));schedule();
-  },{passive:true});
-  if(reduceMotion.addEventListener) reduceMotion.addEventListener("change",()=>{ px=0;py=0;schedule(); });
-}
-initHeroParallax();
-
-/* Reveal once; never hide content if observers are unsupported. */
-function initScrollStory() {
-  const timeline=$("#timeline");
-  if(!timeline)return;
-  const supportsObserver="IntersectionObserver" in window;
-  let observer;
-  if(supportsObserver) {
-    observer=new IntersectionObserver(entries => {
-      for(const entry of entries) {
-        if(!entry.isIntersecting)continue;
-        entry.target.classList.add("is-revealed");
-        entry.target.classList.remove("reveal-pending");
-        observer.unobserve(entry.target);
-      }
-    },{threshold:.07,rootMargin:"0px 0px -16px 0px"});
-  }
-  function attach() {
-    if(!observer || reduceMotion.matches)return;
-    const elements=$(".section-heading,.tile__trigger,.timeline-item,.experience-card,.outro-card");
-    elements.forEach((el,i) => {
-      if(el.dataset.revealObserved || el.classList.contains("is-revealed"))return;
-      el.dataset.revealObserved="true";
-      if(el.getBoundingClientRect().top<window.innerHeight*.83) {
-        el.classList.add("is-revealed");
-        return;
-      }
-      if(el.matches(".tile__trigger")) el.style.setProperty("--reveal-delay",Math.min(i%4,3)*55+"ms");
-      el.classList.add("reveal-pending");
-      observer.observe(el);
+/* Animation as feedback, never an obstacle to reading. */
+if("IntersectionObserver" in window && !reduceMotion.matches){
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      entry.target.classList.add("is-visible");
+      observer.unobserve(entry.target);
     });
-  }
-  window.oceanRevealRefresh=attach;
-  attach();
-  let pending=0;
-  function updateProgress() {
-    pending=0;
-    if(reduceMotion.matches) { timeline.style.setProperty("--journey-progress","1");return; }
-    const rect=timeline.getBoundingClientRect();
-    const start=window.innerHeight*.83;
-    const travel=rect.height+start-window.innerHeight*.20;
-    const amount=Math.max(0,Math.min(1,(start-rect.top)/Math.max(1,travel)));
-    timeline.style.setProperty("--journey-progress",amount.toFixed(3));
-  }
-  const onScroll=() => { if(!pending)pending=requestAnimationFrame(updateProgress); };
-  window.addEventListener("scroll",onScroll,{passive:true});
-  window.addEventListener("resize",onScroll,{passive:true});
-  if(reduceMotion.addEventListener)reduceMotion.addEventListener("change",() => { attach();onScroll(); });
-  updateProgress();
+  },{rootMargin:"0px 0px -25px 0px",threshold:.08});
+  $$(".section-heading,.experience-card,.outro-card").forEach(el=>{
+    if(el.getBoundingClientRect().top>window.innerHeight){
+      el.classList.add("reveal-ready");
+      observer.observe(el);
+    }
+  });
 }
-initScrollStory();
+/* Low-impact local spotlight: no pointer tracking or 3D tilt on mobile. */
+if(window.matchMedia("(hover: hover) and (pointer: fine)").matches&&!reduceMotion.matches){
+  grid.addEventListener("pointermove",event=>{
+    const tile=event.target.closest(".tile");
+    if(!tile)return;
+    const rect=tile.getBoundingClientRect();
+    tile.style.setProperty("--spot-x",((event.clientX-rect.left)/rect.width*100).toFixed(1)+"%");
+    tile.style.setProperty("--spot-y",((event.clientY-rect.top)/rect.height*100).toFixed(1)+"%");
+  },{passive:true});
+}
