@@ -377,3 +377,33 @@ function initOceanAtmosphere() {
   setup();
 }
 initOceanAtmosphere();
+
+function initHeroParallax() {
+  const hero = $(".hero");
+  if (!hero) return;
+  const precisePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  let scheduled = 0,px = 0,py = 0;
+  const apply = () => {
+    scheduled=0;
+    if (reduceMotion.matches) { hero.style.removeProperty("--hero-px");hero.style.removeProperty("--hero-py");return; }
+    hero.style.setProperty("--hero-px",px.toFixed(1)+"px");
+    hero.style.setProperty("--hero-py",py.toFixed(1)+"px");
+  };
+  const schedule = () => { if (!scheduled) scheduled=requestAnimationFrame(apply); };
+  hero.addEventListener("pointermove",event => {
+    if (!precisePointer.matches || reduceMotion.matches) return;
+    const rect=hero.getBoundingClientRect();
+    px=((event.clientX-rect.left)/rect.width-.5)*18;
+    py=((event.clientY-rect.top)/rect.height-.5)*12;
+    schedule();
+  },{passive:true});
+  hero.addEventListener("pointerleave",() => { px=0;py=0;schedule(); });
+  window.addEventListener("scroll",() => {
+    if (precisePointer.matches || reduceMotion.matches) return;
+    const rect=hero.getBoundingClientRect();
+    if(rect.bottom<0 || rect.top>window.innerHeight)return;
+    px=0;py=Math.max(-10,Math.min(10,-rect.top*.035));schedule();
+  },{passive:true});
+  if(reduceMotion.addEventListener) reduceMotion.addEventListener("change",()=>{ px=0;py=0;schedule(); });
+}
+initHeroParallax();

@@ -306,3 +306,15 @@ html[data-theme="light"] .hero__reflection { background:linear-gradient(180deg,r
   .galaxy-layer,.sea-wave,.hero__reflection { animation:none!important;transform:none!important }
   .hero__reflection { opacity:.30 }
 }
+
+/* One-off hero entrance; gentle pointer/scroll parallax on the moon only. */
+.hero__line { display:inline-block;animation:hero-arrive .85s cubic-bezier(.2,.76,.24,1) both }
+.hero__line--name { animation-delay:.14s }
+.hero__subtitle { animation:hero-arrive .75s cubic-bezier(.2,.76,.24,1) .33s both }
+.hero__cta { animation:hero-arrive .72s cubic-bezier(.2,.76,.24,1) .47s both }
+@keyframes hero-arrive { from { opacity:0;transform:translate3d(0,25px,0) } to { opacity:1;transform:translate3d(0,0,0) } }
+.hero__art { transform:translate3d(var(--hero-px,0px),var(--hero-py,0px),0);transition:transform .38s ease-out }
+@media(prefers-reduced-motion:reduce) {
+  .hero__line,.hero__subtitle,.hero__cta { animation:none!important;opacity:1!important;transform:none!important }
+  .hero__art { transform:none!important;transition:none!important }
+}
