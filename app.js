@@ -143,7 +143,7 @@ const projects = [
   }
 ];
 
-const visual = {
+const retiredVisual = {
   garden:'<div class="garden-sun"></div><div class="garden-hill garden-hill--back"></div><div class="garden-hill"></div><div class="garden-bed"></div><span class="garden-sprout" style="--right:30%;--bottom:24%">🌱</span><span class="garden-sprout" style="--right:19%;--bottom:20%">🌿</span><span class="garden-sprout" style="--right:10%;--bottom:23%">🌱</span>',
   asumi:'<div class="asumi-orbit"></div><div class="asumi-orbit asumi-orbit--two"></div><div class="asumi-core">✳</div>',
   miraei:'<div class="miraei-moon"></div><span class="miraei-star" style="--right:14%;--top:13%">✦</span><span class="miraei-star" style="--right:55%;--top:24%">✧</span><span class="miraei-star" style="--right:40%;--top:56%">✧</span>',
@@ -171,7 +171,7 @@ function renderOne(project, index) {
   const number = String(projects.indexOf(project) + 1).padStart(2, "0");
   return '<article class="tile tile--' + esc(project.size) + ' tile--' + id + '" data-id="' + id + '" data-kind="' + esc(project.kind) + '">' +
     '<button class="tile__trigger" type="button" aria-expanded="false" aria-controls="detail-' + id + '" aria-label="' + esc(c.expand + " " + project.title) + '">' +
-      '<div class="tile__visual" aria-hidden="true">' + visual[project.id] + '</div>' +
+      
       '<div class="tile__top"><span class="tile__number">' + number + ' / ' + year + '</span><span class="tile__arrow" aria-hidden="true">↗</span></div>' +
       '<div class="tile__bottom"><p class="tile__category">' + esc(localized(project.category)) + '</p><h3 class="tile__title">' + esc(project.title) + '</h3><p class="tile__subtitle">' + esc(localized(project.tagline)) + '</p></div>' +
     '</button>' +
