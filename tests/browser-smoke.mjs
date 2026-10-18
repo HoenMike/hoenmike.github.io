@@ -40,10 +40,12 @@ try {
     assert.equal(await page.locator('.tile[data-id="sc"] a[href*="github.com"]').count(),0,"SC source privacy");
     await page.locator('.tile[data-id="asumi"] .tile__trigger').click();
     await page.locator('.tile[data-id="asumi"] .tile__trigger').click();
-    await page.waitForFunction(()=>document.querySelectorAll(".tile[data-id=asumi] a[href*=github.com]").length===1);
+    await page.waitForFunction(()=>document.querySelectorAll('.tile[data-id=asumi] a[href*="github.com"]').length===1);
     assert.equal(await page.locator('.tile[data-id="asumi"] a[href*="github.com"]').count(),1,"Public source");
     if(width===390||width===1440){
       await page.locator("#theme-switch").click();
+      await page.evaluate(()=>window.scrollTo(0,0));
+      await page.waitForTimeout(140);
       await page.screenshot({path:"artifacts/portfolio-"+width+".png",fullPage:true,animations:"disabled"});
     }
     await context.close();
