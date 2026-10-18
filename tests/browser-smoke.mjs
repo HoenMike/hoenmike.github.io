@@ -44,8 +44,10 @@ try {
     assert.equal(await page.locator('.tile[data-id="asumi"] a[href*="github.com"]').count(),1,"Public source");
     if(width===390||width===1440){
       await page.locator("#theme-switch").click();
-      await page.evaluate(()=>window.scrollTo(0,0));
-      await page.waitForTimeout(140);
+      await page.keyboard.press("Escape");
+      await page.waitForFunction(()=>document.querySelector('.tile[data-id="asumi"] .tile__trigger')?.getAttribute("aria-expanded")==="false");
+      await page.evaluate(()=>{document.documentElement.style.scrollBehavior="auto";window.scrollTo({top:0,behavior:"instant"});});
+      await page.waitForFunction(()=>window.scrollY===0);
       await page.screenshot({path:"artifacts/portfolio-"+width+".png",fullPage:true,animations:"disabled"});
     }
     await context.close();
