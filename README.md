@@ -1,4 +1,4 @@
-# HoenMike — Seamless Bento Portfolio
+# HoenMike — Midnight Blue Ocean Portfolio
 
 An interactive personal landing page: a living collection of projects and experiments.
 
@@ -11,12 +11,17 @@ An interactive personal landing page: a living collection of projects and experi
 ## Experience
 
 - 12-column asymmetric Bento grid with larger featured tiles and smaller project cards.
-- Restrained styling and improved reading contrast, without decorative interface mockups or extra badges.
+- Restrained single-hue navy bento, moonlit cyan accents and WCAG AA-muted text on the project cards.
+- One fixed canvas starfield in Dark, three parallaxed SVG wave layers, subtle reflection and ocean-only Light theme.
+- One-off hero reveal, optional parallax, desktop card spotlight/tilt, animated filters, scroll reveal and timeline progress.
+- Updated inline moon-and-wave logo plus SVG favicon.
 - Inline expansion: click or tap a tile to grow it in place. No route change or modal.
 - Native View Transitions API when supported; safe fallback; Escape collapses the tile.
 - Project filters: All / Games / AI / Apps & Tools.
 - Vietnamese / English and Dark / Light, saved to browser storage.
-- CSS-drawn art, responsive layouts, reduced-motion support.
+- No third-party JS libraries, no build tool; responsive layouts and reduced-motion support.
+- Canvas only renders for Dark theme while the hero is visible; stops on hidden tabs, caps DPR at 2 and uses 60 stars on mobile.
+- No private project art/screenshots, no decorative text glyphs, and no custom cursor.
 - Timeline and Experience card including ChillTown.
 
 ## Privacy and editorial rules
@@ -44,8 +49,8 @@ Open http://localhost:4173/.
     node --check app.js
     node --test tests/*.test.mjs
 
-Before production verify card open/close and Escape, filters, VI/EN, every theme, keyboard navigation, reduced motion and widths 320px, 390px, 768px and 1440px.
+Before production verify card open/close and Escape, filters, VI/EN, Dark/Light, keyboard navigation, reduced motion and widths 320px, 390px, 768px and 1440px. Also measure Lighthouse mobile performance (target 90+) and check animation behavior on actual devices; static tests do not establish a Lighthouse score.
 
 ## Stack
 
-Semantic HTML, modern CSS Grid, responsive layouts, custom illustrations, JavaScript modules, View Transitions, Web Storage, GitHub Pages and Node built-in tests. No unnecessary client framework or bundle.
+Semantic HTML, modern CSS Grid, canvas starfield, responsive inline SVG waves, JavaScript modules, IntersectionObserver, View Transitions, Web Storage, GitHub Pages and Node built-in tests. No client framework or build tool.

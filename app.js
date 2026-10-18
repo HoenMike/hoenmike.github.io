@@ -11,6 +11,7 @@ let lang = settings.lang === "en" ? "en" : "vi";
 let theme = themes.includes(settings.theme) ? settings.theme : "dark";
 let filter = "all";
 let openId = null;
+let filterTimeout = 0;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const save = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ lang, theme })); } catch { /* storage optional */ } };
 
@@ -143,19 +144,6 @@ const projects = [
   }
 ];
 
-const visual = {
-  garden:'<div class="garden-sun"></div><div class="garden-hill garden-hill--back"></div><div class="garden-hill"></div><div class="garden-bed"></div><span class="garden-sprout" style="--right:30%;--bottom:24%">🌱</span><span class="garden-sprout" style="--right:19%;--bottom:20%">🌿</span><span class="garden-sprout" style="--right:10%;--bottom:23%">🌱</span>',
-  asumi:'<div class="asumi-orbit"></div><div class="asumi-orbit asumi-orbit--two"></div><div class="asumi-core">✳</div>',
-  miraei:'<div class="miraei-moon"></div><span class="miraei-star" style="--right:14%;--top:13%">✦</span><span class="miraei-star" style="--right:55%;--top:24%">✧</span><span class="miraei-star" style="--right:40%;--top:56%">✧</span>',
-  sc:'<div class="sc-emblem"><span class="sc-monogram">SC</span></div>',
-  clock:'<div class="clock-board"><div><b>BÂY</b>GIỜLÀ</div><div>KHÔNGBẢY</div><div><b>MƯỜI</b>HAI</div><div>PHÚT<span>·</span><b>RƯỠI</b></div></div>',
-  alpha:'<div class="alpha-window"><div class="alpha-dots"><i></i><i></i><i></i></div><div class="alpha-bars"><span style="--h:42%"></span><span style="--h:65%"></span><span style="--h:52%"></span><span style="--h:81%"></span><span style="--h:71%"></span><span style="--h:95%"></span></div></div>',
-  zinit:'<div class="zinit-phone"><strong>Today.</strong><span class="zinit-task"></span><span class="zinit-task"></span><span class="zinit-task"></span></div>',
-  elo:'<div class="elo-circle"></div><span class="elo-shuttle">🏸</span>',
-  dino:'<span class="dino-land">🦖</span><div class="dino-ground"></div><span class="dino-cactus">♣</span>',
-  tak:'<div class="tak-board"><span class="tak-cell">○</span><span class="tak-cell"></span><span class="tak-cell">●</span><span class="tak-cell">●</span><span class="tak-cell">○</span><span class="tak-cell"></span><span class="tak-cell"></span><span class="tak-cell">●</span><span class="tak-cell">○</span></div>'
-};
-
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const localized = (entry) => typeof entry === "string" ? entry : (entry?.[lang] || "");
 const trustedExternal = (url) => typeof url === "string" && url.startsWith("https://");
@@ -171,7 +159,7 @@ function renderOne(project, index) {
   const number = String(projects.indexOf(project) + 1).padStart(2, "0");
   return '<article class="tile tile--' + esc(project.size) + ' tile--' + id + '" data-id="' + id + '" data-kind="' + esc(project.kind) + '">' +
     '<button class="tile__trigger" type="button" aria-expanded="false" aria-controls="detail-' + id + '" aria-label="' + esc(c.expand + " " + project.title) + '">' +
-      '<div class="tile__visual" aria-hidden="true">' + visual[project.id] + '</div>' +
+      
       '<div class="tile__top"><span class="tile__number">' + number + ' / ' + year + '</span><span class="tile__arrow" aria-hidden="true">↗</span></div>' +
       '<div class="tile__bottom"><p class="tile__category">' + esc(localized(project.category)) + '</p><h3 class="tile__title">' + esc(project.title) + '</h3><p class="tile__subtitle">' + esc(localized(project.tagline)) + '</p></div>' +
     '</button>' +
@@ -202,6 +190,7 @@ function applyTheme() {
   $(".theme-switch__label").textContent = label;
   $("#theme-switch").setAttribute("aria-label", copy[lang].themeAria + ": " + label);
   $("#theme-switch").title = label;
+  window.dispatchEvent(new Event("ocean-themechange"));
 }
 function syncTiles() {
   $$("[data-id]", $("#project-grid")).forEach((el) => {
@@ -223,19 +212,39 @@ function renderProjects() {
   $("#project-grid").innerHTML = selected.map(renderOne).join("");
   $("#project-count").textContent = String(selected.length).padStart(2,"0");
   syncTiles();
-  $$(".tile__trigger", $("#project-grid")).forEach((trigger) => {
+  window.oceanRevealRefresh?.();
+  $(".tile__trigger", $("#project-grid")).forEach((trigger) => {
     trigger.addEventListener("click", () => {
       const id = trigger.closest(".tile").dataset.id;
       updateLayout(() => { openId = openId === id ? null : id; syncTiles(); });
     });
   });
-  $$(".tile", $("#project-grid")).forEach((tile) => {
-    tile.addEventListener("pointermove", (event) => {
-      if (event.pointerType === "touch") return;
-      const rect = tile.getBoundingClientRect();
-      tile.style.setProperty("--mx", Math.round(((event.clientX - rect.left) / rect.width) * 100) + "%");
-      tile.style.setProperty("--my", Math.round(((event.clientY - rect.top) / rect.height) * 100) + "%");
-    }, { passive:true });
+  const precise = window.matchMedia("(hover: hover) and (pointer: fine)");
+  $(".tile", $("#project-grid")).forEach(tile => {
+    let pending = 0, pointerX = 0, pointerY = 0;
+    const move = () => {
+      pending = 0;
+      if (!precise.matches || reduceMotion.matches) return;
+      const rect=tile.getBoundingClientRect();
+      const x=(pointerX-rect.left)/rect.width,y=(pointerY-rect.top)/rect.height;
+      tile.style.setProperty("--mx",(x*100).toFixed(1)+"%");
+      tile.style.setProperty("--my",(y*100).toFixed(1)+"%");
+      tile.style.setProperty("--rotate-x",((.5-y)*5.5).toFixed(2)+"deg");
+      tile.style.setProperty("--rotate-y",((x-.5)*5.5).toFixed(2)+"deg");
+    };
+    tile.addEventListener("pointermove",event => {
+      if (event.pointerType === "touch" || !precise.matches || reduceMotion.matches) return;
+      pointerX=event.clientX;pointerY=event.clientY;
+      if(!pending)pending=requestAnimationFrame(move);
+    },{passive:true});
+    const reset=() => {
+      if(pending)cancelAnimationFrame(pending);
+      pending=0;
+      tile.style.setProperty("--rotate-x","0deg");
+      tile.style.setProperty("--rotate-y","0deg");
+    };
+    tile.addEventListener("pointerleave",reset);
+    $(".tile__trigger",tile).addEventListener("click",reset);
   });
 }
 const timeline = [
@@ -252,9 +261,12 @@ function renderTimeline() {
     '</p><div class="timeline-item__tags">' + item.tags.map((t) => '<span>' + esc(t) + '</span>').join("") +
     '</div></div>'
   ).join("");
+  window.oceanRevealRefresh?.();
 }
 
 $("#lang-switch").addEventListener("click", () => {
+  clearTimeout(filterTimeout);
+  filterTimeout = 0;
   lang = lang === "vi" ? "en" : "vi";
   save();
   applyTranslations();
@@ -266,22 +278,53 @@ $("#theme-switch").addEventListener("click", () => {
   save();
   applyTheme();
 });
-$$(".filter").forEach((button) => {
-  button.addEventListener("click", () => {
-    const next = button.dataset.filter;
-    if (next === filter) return;
+function filterProjects(next) {
+  if (next === filter && !filterTimeout) return;
+  if (filterTimeout) clearTimeout(filterTimeout);
+  filterTimeout=0;
+  const outgoing=$(".tile",$("#project-grid"));
+  outgoing.forEach(tile => tile.classList.toggle("is-filter-leaving",next!=="all" && tile.dataset.kind!==next));
+  const commit=() => {
+    filterTimeout=0;
     updateLayout(() => {
-      filter = next;
-      openId = null;
-      $$(".filter").forEach((b) => {
-        const active = b.dataset.filter === filter;
-        b.classList.toggle("is-active", active);
-        b.setAttribute("aria-pressed", String(active));
+      filter=next;
+      openId=null;
+      $(".filter").forEach(button => {
+        const active=button.dataset.filter===filter;
+        button.classList.toggle("is-active",active);
+        button.setAttribute("aria-pressed",String(active));
       });
       renderProjects();
     });
-  });
+  };
+  if (reduceMotion.matches) commit();
+  else filterTimeout=setTimeout(commit,165);
+}
+$(".filter").forEach(button => {
+  button.addEventListener("click",() => filterProjects(button.dataset.filter));
 });
+function initMagneticButton() {
+  const button=$(".hero__cta .button--primary"),area=$(".hero__cta");
+  const precise=window.matchMedia("(hover: hover) and (pointer: fine)");
+  if(!button || !area)return;
+  let frame=0,dx=0,dy=0;
+  const apply=() => {
+    frame=0;
+    button.style.transform=reduceMotion.matches ? "" : "translate3d("+dx.toFixed(1)+"px,"+dy.toFixed(1)+"px,0)";
+  };
+  area.addEventListener("pointermove",event => {
+    if(!precise.matches || reduceMotion.matches)return;
+    const rect=button.getBoundingClientRect();
+    const centerX=rect.left+rect.width/2,centerY=rect.top+rect.height/2;
+    const near=Math.abs(event.clientX-centerX)<rect.width/2+45 && Math.abs(event.clientY-centerY)<rect.height/2+45;
+    dx=near ? Math.max(-7,Math.min(7,(event.clientX-centerX)*.09)):0;
+    dy=near ? Math.max(-5,Math.min(5,(event.clientY-centerY)*.09)):0;
+    if(!frame)frame=requestAnimationFrame(apply);
+  },{passive:true});
+  area.addEventListener("pointerleave",()=>{dx=0;dy=0;if(!frame)frame=requestAnimationFrame(apply)});
+  if(reduceMotion.addEventListener)reduceMotion.addEventListener("change",()=>{dx=0;dy=0;apply()});
+}
+initMagneticButton();
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && openId !== null) {
     updateLayout(() => { openId = null; syncTiles(); });
@@ -290,3 +333,170 @@ document.addEventListener("keydown", (event) => {
 applyTranslations();
 renderProjects();
 renderTimeline();
+
+/* One fixed canvas, only active while the hero is in view. */
+function initOceanAtmosphere() {
+  const canvas = $("#starfield");
+  const hero = $(".hero");
+  if (!canvas || !hero) return;
+  const ctx = canvas.getContext("2d", { alpha:true });
+  if (!ctx) return;
+  const mobile = window.matchMedia("(max-width: 600px)");
+  let width = 0, height = 0, stars = [], frame = 0, heroVisible = true, lastTime = 0;
+  let nextMeteor = 0, meteor = null;
+  const random = (a,b) => a + Math.random()*(b-a);
+  const allowed = () => document.visibilityState === "visible" && theme === "dark" && heroVisible;
+  function setup() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width*dpr);
+    canvas.height = Math.round(height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    stars = Array.from({length:mobile.matches ? 60 : 160}, () => ({
+      x:random(0,width), y:random(0,height*.79),
+      radius:random(.4,1.3), opacity:random(.17,.66),
+      speed:random(.00045,.0018), phase:random(0,Math.PI*2)
+    }));
+    nextMeteor = performance.now() + random(10000,15000);
+    draw(performance.now(),true);
+    start();
+  }
+  function draw(now,staticOnly=false) {
+    ctx.clearRect(0,0,width,height);
+    for (const star of stars) {
+      const shimmer = staticOnly || reduceMotion.matches ? 0 : .24*Math.sin(now*star.speed+star.phase);
+      ctx.globalAlpha = Math.max(.08,Math.min(.95,star.opacity+shimmer));
+      ctx.fillStyle = "#e8f7ff";
+      ctx.beginPath();
+      ctx.arc(star.x,star.y,star.radius,0,Math.PI*2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (staticOnly || reduceMotion.matches) return;
+    if (!meteor && now >= nextMeteor) {
+      meteor = { start:now,x:random(width*.18,width*.85),y:random(height*.05,height*.38) };
+      nextMeteor = now + random(10000,15000);
+    }
+    if (meteor) {
+      const t=(now-meteor.start)/750;
+      if(t>=1) meteor=null;
+      else {
+        const x=meteor.x+t*95,y=meteor.y+t*57;
+        ctx.globalAlpha=Math.sin(Math.PI*t)*.66;
+        ctx.lineWidth=1.2;
+        ctx.strokeStyle="#bdeeff";
+        ctx.beginPath();ctx.moveTo(x-42*t,y-23*t);ctx.lineTo(x,y);ctx.stroke();
+        ctx.globalAlpha=1;
+      }
+    }
+  }
+  function tick(now) {
+    frame=0;
+    if (!allowed() || reduceMotion.matches) return;
+    if (now-lastTime >= 30) { draw(now);lastTime=now; }
+    frame=requestAnimationFrame(tick);
+  }
+  function stop() { if(frame) cancelAnimationFrame(frame);frame=0; }
+  function start() {
+    if (!allowed() || frame) return;
+    if (reduceMotion.matches) { draw(performance.now(),true);return; }
+    lastTime=0;
+    nextMeteor=performance.now()+random(10000,15000);
+    frame=requestAnimationFrame(tick);
+  }
+  function refresh() { stop();if(allowed())start(); }
+  const observer = new IntersectionObserver(entries => {
+    heroVisible=entries[0].isIntersecting;
+    refresh();
+  },{rootMargin:"80px"});
+  observer.observe(hero);
+  document.addEventListener("visibilitychange",refresh);
+  window.addEventListener("ocean-themechange",refresh);
+  window.addEventListener("resize",setup,{passive:true});
+  if (mobile.addEventListener) mobile.addEventListener("change",setup);
+  if (reduceMotion.addEventListener) reduceMotion.addEventListener("change",refresh);
+  setup();
+}
+initOceanAtmosphere();
+
+function initHeroParallax() {
+  const hero = $(".hero");
+  if (!hero) return;
+  const precisePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  let scheduled = 0,px = 0,py = 0;
+  const apply = () => {
+    scheduled=0;
+    if (reduceMotion.matches) { hero.style.removeProperty("--hero-px");hero.style.removeProperty("--hero-py");return; }
+    hero.style.setProperty("--hero-px",px.toFixed(1)+"px");
+    hero.style.setProperty("--hero-py",py.toFixed(1)+"px");
+  };
+  const schedule = () => { if (!scheduled) scheduled=requestAnimationFrame(apply); };
+  hero.addEventListener("pointermove",event => {
+    if (!precisePointer.matches || reduceMotion.matches) return;
+    const rect=hero.getBoundingClientRect();
+    px=((event.clientX-rect.left)/rect.width-.5)*18;
+    py=((event.clientY-rect.top)/rect.height-.5)*12;
+    schedule();
+  },{passive:true});
+  hero.addEventListener("pointerleave",() => { px=0;py=0;schedule(); });
+  window.addEventListener("scroll",() => {
+    if (precisePointer.matches || reduceMotion.matches) return;
+    const rect=hero.getBoundingClientRect();
+    if(rect.bottom<0 || rect.top>window.innerHeight)return;
+    px=0;py=Math.max(-10,Math.min(10,-rect.top*.035));schedule();
+  },{passive:true});
+  if(reduceMotion.addEventListener) reduceMotion.addEventListener("change",()=>{ px=0;py=0;schedule(); });
+}
+initHeroParallax();
+
+/* Reveal once; never hide content if observers are unsupported. */
+function initScrollStory() {
+  const timeline=$("#timeline");
+  if(!timeline)return;
+  const supportsObserver="IntersectionObserver" in window;
+  let observer;
+  if(supportsObserver) {
+    observer=new IntersectionObserver(entries => {
+      for(const entry of entries) {
+        if(!entry.isIntersecting)continue;
+        entry.target.classList.add("is-revealed");
+        entry.target.classList.remove("reveal-pending");
+        observer.unobserve(entry.target);
+      }
+    },{threshold:.07,rootMargin:"0px 0px -16px 0px"});
+  }
+  function attach() {
+    if(!observer || reduceMotion.matches)return;
+    const elements=$(".section-heading,.tile__trigger,.timeline-item,.experience-card,.outro-card");
+    elements.forEach((el,i) => {
+      if(el.dataset.revealObserved || el.classList.contains("is-revealed"))return;
+      el.dataset.revealObserved="true";
+      if(el.getBoundingClientRect().top<window.innerHeight*.83) {
+        el.classList.add("is-revealed");
+        return;
+      }
+      if(el.matches(".tile__trigger")) el.style.setProperty("--reveal-delay",Math.min(i%4,3)*55+"ms");
+      el.classList.add("reveal-pending");
+      observer.observe(el);
+    });
+  }
+  window.oceanRevealRefresh=attach;
+  attach();
+  let pending=0;
+  function updateProgress() {
+    pending=0;
+    if(reduceMotion.matches) { timeline.style.setProperty("--journey-progress","1");return; }
+    const rect=timeline.getBoundingClientRect();
+    const start=window.innerHeight*.83;
+    const travel=rect.height+start-window.innerHeight*.20;
+    const amount=Math.max(0,Math.min(1,(start-rect.top)/Math.max(1,travel)));
+    timeline.style.setProperty("--journey-progress",amount.toFixed(3));
+  }
+  const onScroll=() => { if(!pending)pending=requestAnimationFrame(updateProgress); };
+  window.addEventListener("scroll",onScroll,{passive:true});
+  window.addEventListener("resize",onScroll,{passive:true});
+  if(reduceMotion.addEventListener)reduceMotion.addEventListener("change",() => { attach();onScroll(); });
+  updateProgress();
+}
+initScrollStory();
