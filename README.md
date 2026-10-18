@@ -4,14 +4,14 @@ An interactive personal landing page: a living collection of projects and experi
 
 ## Release
 
-- Live site: https://hoenmike.github.io/ (GitHub Pages on `main`).
-- This portfolio uses a simple static deployment; push or merge to `main` to release.
-- Run `node --check app.js` and `node --test tests/*.test.mjs` before shipping.
+- Production: https://hoenmike.github.io/ (GitHub Pages, deployed from `main`).
+- Push or merge into `main` to deploy; no separate preview deployment is required.
+- Validate with `node --check app.js` and `node --test tests/*.test.mjs`.
 
 ## Experience
 
 - 12-column asymmetric Bento grid with larger featured tiles and smaller project cards.
-- Editorial hero with a hand-built miniature project workspace, interests strip and clearer project discovery.
+- Restrained styling and improved reading contrast, without decorative interface mockups or extra badges.
 - Inline expansion: click or tap a tile to grow it in place. No route change or modal.
 - Native View Transitions API when supported; safe fallback; Escape collapses the tile.
 - Project filters: All / Games / AI / Apps & Tools.
