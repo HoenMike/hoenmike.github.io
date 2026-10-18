@@ -11,6 +11,7 @@ let lang = settings.lang === "en" ? "en" : "vi";
 let theme = themes.includes(settings.theme) ? settings.theme : "dark";
 let filter = "all";
 let openId = null;
+let filterTimeout = 0;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const save = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ lang, theme })); } catch { /* storage optional */ } };
 
@@ -230,13 +231,32 @@ function renderProjects() {
       updateLayout(() => { openId = openId === id ? null : id; syncTiles(); });
     });
   });
-  $$(".tile", $("#project-grid")).forEach((tile) => {
-    tile.addEventListener("pointermove", (event) => {
-      if (event.pointerType === "touch") return;
-      const rect = tile.getBoundingClientRect();
-      tile.style.setProperty("--mx", Math.round(((event.clientX - rect.left) / rect.width) * 100) + "%");
-      tile.style.setProperty("--my", Math.round(((event.clientY - rect.top) / rect.height) * 100) + "%");
-    }, { passive:true });
+  const precise = window.matchMedia("(hover: hover) and (pointer: fine)");
+  $(".tile", $("#project-grid")).forEach(tile => {
+    let pending = 0, pointerX = 0, pointerY = 0;
+    const move = () => {
+      pending = 0;
+      if (!precise.matches || reduceMotion.matches) return;
+      const rect=tile.getBoundingClientRect();
+      const x=(pointerX-rect.left)/rect.width,y=(pointerY-rect.top)/rect.height;
+      tile.style.setProperty("--mx",(x*100).toFixed(1)+"%");
+      tile.style.setProperty("--my",(y*100).toFixed(1)+"%");
+      tile.style.setProperty("--rotate-x",((.5-y)*5.5).toFixed(2)+"deg");
+      tile.style.setProperty("--rotate-y",((x-.5)*5.5).toFixed(2)+"deg");
+    };
+    tile.addEventListener("pointermove",event => {
+      if (event.pointerType === "touch" || !precise.matches || reduceMotion.matches) return;
+      pointerX=event.clientX;pointerY=event.clientY;
+      if(!pending)pending=requestAnimationFrame(move);
+    },{passive:true});
+    const reset=() => {
+      if(pending)cancelAnimationFrame(pending);
+      pending=0;
+      tile.style.setProperty("--rotate-x","0deg");
+      tile.style.setProperty("--rotate-y","0deg");
+    };
+    tile.addEventListener("pointerleave",reset);
+    $(".tile__trigger",tile).addEventListener("click",reset);
   });
 }
 const timeline = [
@@ -256,6 +276,8 @@ function renderTimeline() {
 }
 
 $("#lang-switch").addEventListener("click", () => {
+  clearTimeout(filterTimeout);
+  filterTimeout = 0;
   lang = lang === "vi" ? "en" : "vi";
   save();
   applyTranslations();
@@ -267,22 +289,53 @@ $("#theme-switch").addEventListener("click", () => {
   save();
   applyTheme();
 });
-$$(".filter").forEach((button) => {
-  button.addEventListener("click", () => {
-    const next = button.dataset.filter;
-    if (next === filter) return;
+function filterProjects(next) {
+  if (next === filter && !filterTimeout) return;
+  if (filterTimeout) clearTimeout(filterTimeout);
+  filterTimeout=0;
+  const outgoing=$(".tile",$("#project-grid"));
+  outgoing.forEach(tile => tile.classList.toggle("is-filter-leaving",next!=="all" && tile.dataset.kind!==next));
+  const commit=() => {
+    filterTimeout=0;
     updateLayout(() => {
-      filter = next;
-      openId = null;
-      $$(".filter").forEach((b) => {
-        const active = b.dataset.filter === filter;
-        b.classList.toggle("is-active", active);
-        b.setAttribute("aria-pressed", String(active));
+      filter=next;
+      openId=null;
+      $(".filter").forEach(button => {
+        const active=button.dataset.filter===filter;
+        button.classList.toggle("is-active",active);
+        button.setAttribute("aria-pressed",String(active));
       });
       renderProjects();
     });
-  });
+  };
+  if (reduceMotion.matches) commit();
+  else filterTimeout=setTimeout(commit,165);
+}
+$(".filter").forEach(button => {
+  button.addEventListener("click",() => filterProjects(button.dataset.filter));
 });
+function initMagneticButton() {
+  const button=$(".hero__cta .button--primary"),area=$(".hero__cta");
+  const precise=window.matchMedia("(hover: hover) and (pointer: fine)");
+  if(!button || !area)return;
+  let frame=0,dx=0,dy=0;
+  const apply=() => {
+    frame=0;
+    button.style.transform=reduceMotion.matches ? "" : "translate3d("+dx.toFixed(1)+"px,"+dy.toFixed(1)+"px,0)";
+  };
+  area.addEventListener("pointermove",event => {
+    if(!precise.matches || reduceMotion.matches)return;
+    const rect=button.getBoundingClientRect();
+    const centerX=rect.left+rect.width/2,centerY=rect.top+rect.height/2;
+    const near=Math.abs(event.clientX-centerX)<rect.width/2+45 && Math.abs(event.clientY-centerY)<rect.height/2+45;
+    dx=near ? Math.max(-7,Math.min(7,(event.clientX-centerX)*.09)):0;
+    dy=near ? Math.max(-5,Math.min(5,(event.clientY-centerY)*.09)):0;
+    if(!frame)frame=requestAnimationFrame(apply);
+  },{passive:true});
+  area.addEventListener("pointerleave",()=>{dx=0;dy=0;if(!frame)frame=requestAnimationFrame(apply)});
+  if(reduceMotion.addEventListener)reduceMotion.addEventListener("change",()=>{dx=0;dy=0;apply()});
+}
+initMagneticButton();
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && openId !== null) {
     updateLayout(() => { openId = null; syncTiles(); });

@@ -318,3 +318,20 @@ html[data-theme="light"] .hero__reflection { background:linear-gradient(180deg,r
   .hero__line,.hero__subtitle,.hero__cta { animation:none!important;opacity:1!important;transform:none!important }
   .hero__art { transform:none!important;transition:none!important }
 }
+
+/* Pointer-only surface feedback. Motion is entirely transform/opacity. */
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  .tile { --rotate-x:0deg;--rotate-y:0deg;transform:perspective(1000px) rotateX(var(--rotate-x)) rotateY(var(--rotate-y));transition:transform .24s ease-out,border-color .24s }
+  .tile::before { content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),rgba(120,220,239,.12),transparent 75%);opacity:0;transition:opacity .25s }
+  .tile::after { content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;z-index:1;pointer-events:none;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(154,238,255,.65),transparent 80%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;opacity:0;transition:opacity .25s }
+  .tile:hover::before,.tile:hover::after,.tile:focus-within::after { opacity:1 }
+  .tile.is-expanded { transform:none }
+  .hero__cta .button--primary { transition:transform .18s ease-out,background-color .2s }
+}
+.tile.is-filter-leaving { opacity:.16;transition:opacity .16s ease }
+@media(max-width:600px) {
+  .tile::before,.tile::after { display:none!important }
+}
+@media(prefers-reduced-motion:reduce) {
+  .tile,.tile.is-filter-leaving,.hero__cta .button--primary { transform:none!important;transition:none!important }
+}
