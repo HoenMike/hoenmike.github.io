@@ -16,17 +16,19 @@ test("Page has readable landmarks and accessible card host", () => {
   assert.match(js, /aria-controls/);
 });
 
-test("Project SC is the sole displayed confidential project name", () => {
+test("Project SC is the private, public-safe presentation", () => {
   assert.match(js, /title:"Project SC"/);
-  assert.match(js, /id:"sc".*visibility:"private"/);
-  assert.doesNotMatch(js, /ChinhLandingPage|StellarCapital|Stellar-Capital|stellar-frontend/i);
-  assert.doesNotMatch(html, /ChinhLandingPage|StellarCapital|Stellar-Capital/i);
+  const details = js.split('id:"sc",')[1].split('id:"clock",')[0];
+  assert.match(details, /visibility:"private"/);
+  assert.doesNotMatch(details, /source:|demo:/);
 });
 
-test("Private projects have no public source links", () => {
-  for (const name of ["ProjectG", "SecondBrainAssistant", "AlphaCMS2", "zinit_productivity", "BatmintonRanking"]) {
-    assert.ok(!js.includes("https://github.com/HoenMike/" + name), "private source reference: " + name);
-  }
+test("Source links only target an approved set of public projects", () => {
+  const publicSources = [...js.matchAll(/source:"(https:\/\/github\.com\/[^"]+)"/g)].map((m) => m[1]).sort();
+  assert.deepEqual(publicSources, [
+    "https://github.com/HoenMike/ChromeDino",
+    "https://github.com/HoenMike/DiscordMikeBot"
+  ]);
   assert.match(js, /project\.visibility === "public"/);
 });
 
