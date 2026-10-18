@@ -202,6 +202,7 @@ function applyTheme() {
   $(".theme-switch__label").textContent = label;
   $("#theme-switch").setAttribute("aria-label", copy[lang].themeAria + ": " + label);
   $("#theme-switch").title = label;
+  window.dispatchEvent(new Event("ocean-themechange"));
 }
 function syncTiles() {
   $$("[data-id]", $("#project-grid")).forEach((el) => {
@@ -290,3 +291,89 @@ document.addEventListener("keydown", (event) => {
 applyTranslations();
 renderProjects();
 renderTimeline();
+
+/* One fixed canvas, only active while the hero is in view. */
+function initOceanAtmosphere() {
+  const canvas = $("#starfield");
+  const hero = $(".hero");
+  if (!canvas || !hero) return;
+  const ctx = canvas.getContext("2d", { alpha:true });
+  if (!ctx) return;
+  const mobile = window.matchMedia("(max-width: 600px)");
+  let width = 0, height = 0, stars = [], frame = 0, heroVisible = true, lastTime = 0;
+  let nextMeteor = 0, meteor = null;
+  const random = (a,b) => a + Math.random()*(b-a);
+  const allowed = () => document.visibilityState === "visible" && theme === "dark" && heroVisible;
+  function setup() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width*dpr);
+    canvas.height = Math.round(height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    stars = Array.from({length:mobile.matches ? 60 : 160}, () => ({
+      x:random(0,width), y:random(0,height*.79),
+      radius:random(.4,1.3), opacity:random(.17,.66),
+      speed:random(.00045,.0018), phase:random(0,Math.PI*2)
+    }));
+    nextMeteor = performance.now() + random(10000,15000);
+    draw(performance.now(),true);
+    start();
+  }
+  function draw(now,staticOnly=false) {
+    ctx.clearRect(0,0,width,height);
+    for (const star of stars) {
+      const shimmer = staticOnly || reduceMotion.matches ? 0 : .24*Math.sin(now*star.speed+star.phase);
+      ctx.globalAlpha = Math.max(.08,Math.min(.95,star.opacity+shimmer));
+      ctx.fillStyle = "#e8f7ff";
+      ctx.beginPath();
+      ctx.arc(star.x,star.y,star.radius,0,Math.PI*2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (staticOnly || reduceMotion.matches) return;
+    if (!meteor && now >= nextMeteor) {
+      meteor = { start:now,x:random(width*.18,width*.85),y:random(height*.05,height*.38) };
+      nextMeteor = now + random(10000,15000);
+    }
+    if (meteor) {
+      const t=(now-meteor.start)/750;
+      if(t>=1) meteor=null;
+      else {
+        const x=meteor.x+t*95,y=meteor.y+t*57;
+        ctx.globalAlpha=Math.sin(Math.PI*t)*.66;
+        ctx.lineWidth=1.2;
+        ctx.strokeStyle="#bdeeff";
+        ctx.beginPath();ctx.moveTo(x-42*t,y-23*t);ctx.lineTo(x,y);ctx.stroke();
+        ctx.globalAlpha=1;
+      }
+    }
+  }
+  function tick(now) {
+    frame=0;
+    if (!allowed() || reduceMotion.matches) return;
+    if (now-lastTime >= 30) { draw(now);lastTime=now; }
+    frame=requestAnimationFrame(tick);
+  }
+  function stop() { if(frame) cancelAnimationFrame(frame);frame=0; }
+  function start() {
+    if (!allowed() || frame) return;
+    if (reduceMotion.matches) { draw(performance.now(),true);return; }
+    lastTime=0;
+    nextMeteor=performance.now()+random(10000,15000);
+    frame=requestAnimationFrame(tick);
+  }
+  function refresh() { stop();if(allowed())start(); }
+  const observer = new IntersectionObserver(entries => {
+    heroVisible=entries[0].isIntersecting;
+    refresh();
+  },{rootMargin:"80px"});
+  observer.observe(hero);
+  document.addEventListener("visibilitychange",refresh);
+  window.addEventListener("ocean-themechange",refresh);
+  window.addEventListener("resize",setup,{passive:true});
+  if (mobile.addEventListener) mobile.addEventListener("change",setup);
+  if (reduceMotion.addEventListener) reduceMotion.addEventListener("change",refresh);
+  setup();
+}
+initOceanAtmosphere();

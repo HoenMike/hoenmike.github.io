@@ -274,3 +274,35 @@ html[data-theme="light"] .tile--tak { --tile-bg:#deedf4 }
   html { scroll-behavior:auto }
   *,*::before,*::after { animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important }
 }
+
+/* Ocean atmosphere. Fixed and isolated from layout and pointer interaction. */
+.starfield { position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:block;opacity:.88 }
+html[data-theme="light"] .starfield { opacity:0 }
+@keyframes galaxy-drift-a { from { transform:translate3d(-1.5%,.5%,0) rotate(-2deg) } to { transform:translate3d(2.5%,-1%,0) rotate(1deg) } }
+@keyframes galaxy-drift-b { from { transform:translate3d(2%,1%,0) } to { transform:translate3d(-2%,-1%,0) } }
+@keyframes galaxy-drift-c { from { transform:translate3d(-2%,0,0) } to { transform:translate3d(1%,1.5%,0) } }
+.galaxy-layer--one { animation:galaxy-drift-a 105s ease-in-out infinite alternate }
+.galaxy-layer--two { animation:galaxy-drift-b 84s ease-in-out infinite alternate }
+.galaxy-layer--three { animation:galaxy-drift-c 118s ease-in-out infinite alternate }
+.hero__sea { position:absolute;bottom:0;left:-3%;width:106%;height:205px;z-index:0;overflow:hidden;pointer-events:none }
+.sea-wave { position:absolute;bottom:0;width:106%;height:100%;left:-3%;transform:translate3d(0,0,0) }
+.sea-wave--far { fill:#08293b;opacity:.60;animation:wave-far 17s ease-in-out infinite alternate }
+.sea-wave--middle { fill:#0a3445;opacity:.79;animation:wave-mid 12s ease-in-out infinite alternate }
+.sea-wave--near { fill:#082332;opacity:.93;animation:wave-near 9s ease-in-out infinite alternate }
+@keyframes wave-far { from { transform:translate3d(-3%,0,0) } to { transform:translate3d(2%,0,0) } }
+@keyframes wave-mid { from { transform:translate3d(2%,0,0) } to { transform:translate3d(-3%,0,0) } }
+@keyframes wave-near { from { transform:translate3d(-2%,0,0) } to { transform:translate3d(2%,0,0) } }
+.hero__reflection { position:absolute;z-index:1;bottom:3px;right:93px;width:106px;height:160px;background:linear-gradient(180deg,rgba(120,220,239,0),rgba(168,241,255,.23) 43%,rgba(120,220,239,0));clip-path:polygon(45% 0,55% 0,93% 100%,7% 100%);mask-image:repeating-linear-gradient(180deg,#000 0 5px,transparent 6px 15px);opacity:.55;animation:sea-shimmer 6.5s ease-in-out infinite alternate }
+@keyframes sea-shimmer { from { opacity:.30;transform:translate3d(-4px,0,0) scaleX(.86) } to { opacity:.70;transform:translate3d(5px,0,0) scaleX(1.1) } }
+html[data-theme="light"] .sea-wave--far { fill:#bddfe9;opacity:.7 }
+html[data-theme="light"] .sea-wave--middle { fill:#9ccddd;opacity:.57 }
+html[data-theme="light"] .sea-wave--near { fill:#c5e2e9;opacity:.76 }
+html[data-theme="light"] .hero__reflection { background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,250,227,.76),rgba(255,255,255,0));opacity:.5 }
+@media(max-width:600px) {
+  .hero__sea { height:170px }
+  .hero__reflection { right:14%;width:67px;height:128px }
+}
+@media(prefers-reduced-motion:reduce) {
+  .galaxy-layer,.sea-wave,.hero__reflection { animation:none!important;transform:none!important }
+  .hero__reflection { opacity:.30 }
+}
