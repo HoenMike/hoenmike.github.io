@@ -335,3 +335,13 @@ html[data-theme="light"] .hero__reflection { background:linear-gradient(180deg,r
 @media(prefers-reduced-motion:reduce) {
   .tile,.tile.is-filter-leaving,.hero__cta .button--primary { transform:none!important;transition:none!important }
 }
+
+/* Scroll entrance: one quiet movement per section/card; content is otherwise still. */
+.reveal-pending { opacity:0;transform:translate3d(0,22px,0) }
+.is-revealed { opacity:1;transform:translate3d(0,0,0);transition:opacity .62s ease var(--reveal-delay,0ms),transform .62s cubic-bezier(.2,.8,.2,1) var(--reveal-delay,0ms) }
+.timeline::before { content:"";position:absolute;top:13px;bottom:34px;left:18px;width:2px;background:var(--accent);transform-origin:top center;transform:scaleY(var(--journey-progress,0));pointer-events:none;z-index:1 }
+@media(max-width:600px) { .timeline::before { left:8px } }
+@media(prefers-reduced-motion:reduce) {
+  .reveal-pending,.is-revealed { opacity:1!important;transform:none!important;transition:none!important }
+  .timeline::before { transform:scaleY(1)!important }
+}

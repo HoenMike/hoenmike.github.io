@@ -225,7 +225,8 @@ function renderProjects() {
   $("#project-grid").innerHTML = selected.map(renderOne).join("");
   $("#project-count").textContent = String(selected.length).padStart(2,"0");
   syncTiles();
-  $$(".tile__trigger", $("#project-grid")).forEach((trigger) => {
+  window.oceanRevealRefresh?.();
+  $(".tile__trigger", $("#project-grid")).forEach((trigger) => {
     trigger.addEventListener("click", () => {
       const id = trigger.closest(".tile").dataset.id;
       updateLayout(() => { openId = openId === id ? null : id; syncTiles(); });
@@ -273,6 +274,7 @@ function renderTimeline() {
     '</p><div class="timeline-item__tags">' + item.tags.map((t) => '<span>' + esc(t) + '</span>').join("") +
     '</div></div>'
   ).join("");
+  window.oceanRevealRefresh?.();
 }
 
 $("#lang-switch").addEventListener("click", () => {
@@ -460,3 +462,54 @@ function initHeroParallax() {
   if(reduceMotion.addEventListener) reduceMotion.addEventListener("change",()=>{ px=0;py=0;schedule(); });
 }
 initHeroParallax();
+
+/* Reveal once; never hide content if observers are unsupported. */
+function initScrollStory() {
+  const timeline=$("#timeline");
+  if(!timeline)return;
+  const supportsObserver="IntersectionObserver" in window;
+  let observer;
+  if(supportsObserver) {
+    observer=new IntersectionObserver(entries => {
+      for(const entry of entries) {
+        if(!entry.isIntersecting)continue;
+        entry.target.classList.add("is-revealed");
+        entry.target.classList.remove("reveal-pending");
+        observer.unobserve(entry.target);
+      }
+    },{threshold:.07,rootMargin:"0px 0px -16px 0px"});
+  }
+  function attach() {
+    if(!observer || reduceMotion.matches)return;
+    const elements=$$(".section-heading,.tile,.timeline-item,.experience-card,.outro-card");
+    elements.forEach((el,i) => {
+      if(el.dataset.revealObserved || el.classList.contains("is-revealed"))return;
+      el.dataset.revealObserved="true";
+      if(el.getBoundingClientRect().top<window.innerHeight*.83) {
+        el.classList.add("is-revealed");
+        return;
+      }
+      if(el.matches(".tile")) el.style.setProperty("--reveal-delay",Math.min(i%4,3)*55+"ms");
+      el.classList.add("reveal-pending");
+      observer.observe(el);
+    });
+  }
+  window.oceanRevealRefresh=attach;
+  attach();
+  let pending=0;
+  function updateProgress() {
+    pending=0;
+    if(reduceMotion.matches) { timeline.style.setProperty("--journey-progress","1");return; }
+    const rect=timeline.getBoundingClientRect();
+    const start=window.innerHeight*.83;
+    const travel=rect.height+start-window.innerHeight*.20;
+    const amount=Math.max(0,Math.min(1,(start-rect.top)/Math.max(1,travel)));
+    timeline.style.setProperty("--journey-progress",amount.toFixed(3));
+  }
+  const onScroll=() => { if(!pending)pending=requestAnimationFrame(updateProgress); };
+  window.addEventListener("scroll",onScroll,{passive:true});
+  window.addEventListener("resize",onScroll,{passive:true});
+  if(reduceMotion.addEventListener)reduceMotion.addEventListener("change",() => { attach();onScroll(); });
+  updateProgress();
+}
+initScrollStory();
