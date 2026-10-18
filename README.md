@@ -1,56 +1,50 @@
-# HoenMike — Midnight Blue Ocean Portfolio
+# HoenMike — Developer Portfolio
 
-An interactive personal landing page: a living collection of projects and experiments.
+A personal portfolio by Mike: selected web applications, AI companions, small games and experiments. Built with semantic HTML, modern CSS and plain JavaScript — no runtime framework or build tool.
 
-## Release
+## Live site
 
-- Production: https://hoenmike.github.io/ (GitHub Pages, deployed from `main`).
-- Push or merge into `main` to deploy; no separate preview deployment is required.
-- Validate with `node --check app.js` and `node --test tests/*.test.mjs`.
+https://hoenmike.github.io/ — GitHub Pages deploys from `main`.
 
-## Experience
+## Design & interactions
 
-- 12-column asymmetric Bento grid with larger featured tiles and smaller project cards.
-- Restrained single-hue navy bento, moonlit cyan accents and WCAG AA-muted text on the project cards.
-- One fixed canvas starfield in Dark, three parallaxed SVG wave layers, subtle reflection and ocean-only Light theme.
-- One-off hero reveal, optional parallax, desktop card spotlight/tilt, animated filters, scroll reveal and timeline progress.
-- Updated inline moon-and-wave logo plus SVG favicon.
-- Inline expansion: click or tap a tile to grow it in place. No route change or modal.
-- Native View Transitions API when supported; safe fallback; Escape collapses the tile.
-- Project filters: All / Games / AI / Apps & Tools.
-- Vietnamese / English and Dark / Light, saved to browser storage.
-- No third-party JS libraries, no build tool; responsive layouts and reduced-motion support.
-- Canvas only renders for Dark theme while the hero is visible; stops on hidden tabs, caps DPR at 2 and uses 60 stars on mobile.
-- No private project art/screenshots, no decorative text glyphs, and no custom cursor.
-- Timeline and Experience card including ChillTown.
+- Purpose first: introduction, actual technologies used, an interactive "currently building" panel, selected work, milestones and links to public source.
+- Restrained navy/slate with cool cyan accents. Dark/Light themes and Vietnamese/English stored in browser storage.
+- Asymmetric 12-column responsive Bento (featured and compact project cards) with original vector marks that do not expose private project information.
+- Click a project to expand its overview, technologies and notes in place. Native View Transitions where supported; keyboard Enter/Space and Escape, plus safe fallback.
+- Filters: All / Games / AI / Apps & Tools. Workspace projects open their matching card.
+- Background grid, gentle hover feedback and no scroll-hidden content. No literal waves, moon, starfield, continuously running canvas or additional animation libraries.
+- Reduced-motion support and visible focus states. Fonts: DM Sans and Space Grotesk only.
 
-## Privacy and editorial rules
+## Privacy and editorial rules — maintain this allowlist
 
-Public showcase content is an explicit allowlist in app.js, not a feed of private GitHub metadata.
+All public project text is explicitly defined in `app.js`, not generated from private GitHub metadata.
 
-- The confidential project is displayed ONLY as Project SC, with generic copy.
-- No private source URL, architecture, internal features or internal data for Project SC.
-- Zinit is labeled Graduation Thesis.
-- ChillTown is an experiment in Experience, not a claim of employment.
-- Chrome Dino is a Java/OOP game from 2023.
-- Source links exist only for public projects (Asumi and Chrome Dino).
-- Preserve the word clock's open-source attribution.
+- The confidential project is displayed **only as Project SC**, with generic wording. Never expose source links, implementation details, internal architecture, business information or screenshots.
+- Zinit is explicitly the **Graduation Thesis**.
+- ChillTown belongs to experiments/experience, not an employment claim.
+- Chrome Dino is an early Java/OOP game from 2023.
+- Source links are approved only for Asumi and Chrome Dino. A public Word Clock **demo** link is separate from source access.
+- Word Clock maintains attribution to `tridzfr/vietnamese-word-clock`.
+- Projects with private data are represented by abstract vector graphics, never confidential screenshots.
 
-## Local preview
+## Local development
 
-No build tool required. Run:
+No bundling:
 
-    python -m http.server 4173
+```bash
+python -m http.server 4173
+```
 
-Open http://localhost:4173/.
+Open http://localhost:4173.
 
 ## Checks
 
-    node --check app.js
-    node --test tests/*.test.mjs
+```bash
+node --check app.js
+node --test tests/*.test.mjs
+```
 
-Before production verify card open/close and Escape, filters, VI/EN, Dark/Light, keyboard navigation, reduced motion and widths 320px, 390px, 768px and 1440px. Also measure Lighthouse mobile performance (target 90+) and check animation behavior on actual devices; static tests do not establish a Lighthouse score.
+Browser QA additionally verifies language/theme switching, all project filters, card expansion and Escape, timeline rendering, privacy, 320 / 390 / 768 / 1440 widths and reduced-motion using Playwright on CI. Playwright is a **test-only** dependency installed by the workflow; it is not bundled or downloaded by the production site.
 
-## Stack
-
-Semantic HTML, modern CSS Grid, canvas starfield, responsive inline SVG waves, JavaScript modules, IntersectionObserver, View Transitions, Web Storage, GitHub Pages and Node built-in tests. No client framework or build tool.
+Before declaring Lighthouse Performance ≥90, measure it on a deployed mobile build. Syntax/unit tests and browser behavior checks alone are not Lighthouse measurements.
