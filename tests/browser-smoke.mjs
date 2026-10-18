@@ -19,23 +19,28 @@ try {
     assert.equal(await page.locator(".hero__name").textContent(),"Mike.");
     for(const [kind,count] of [["game",3],["ai",2],["app",5],["all",10]]){
       await page.locator('.filter[data-filter="'+kind+'"]').click();
+      await page.waitForFunction(expected=>document.querySelectorAll(".tile").length===expected,count);
       assert.equal(await page.locator(".tile").count(),count,kind+" filter at "+width);
     }
     const garden=page.locator('.tile[data-id="garden"] .tile__trigger');
     await garden.click();
+    await page.waitForFunction(()=>document.querySelector(".tile[data-id=garden] .tile__trigger")?.getAttribute("aria-expanded")==="true");
     assert.equal(await garden.getAttribute("aria-expanded"),"true");
     assert.equal(await page.locator("#detail-garden").isVisible(),true);
     await page.keyboard.press("Escape");
+    await page.waitForFunction(()=>document.querySelector(".tile[data-id=garden] .tile__trigger")?.getAttribute("aria-expanded")==="false");
     assert.equal(await garden.getAttribute("aria-expanded"),"false");
     await page.locator("#lang-switch").click();
     assert.equal(await page.locator("html").getAttribute("lang"),"en");
     await page.locator("#theme-switch").click();
     assert.equal(await page.locator("html").getAttribute("data-theme"),"light");
     await page.locator('[data-open-project="asumi"]').click();
+    await page.waitForFunction(()=>document.querySelector(".tile[data-id=asumi] .tile__trigger")?.getAttribute("aria-expanded")==="true");
     assert.equal(await page.locator('.tile[data-id="asumi"] .tile__trigger').getAttribute("aria-expanded"),"true");
     assert.equal(await page.locator('.tile[data-id="sc"] a[href*="github.com"]').count(),0,"SC source privacy");
     await page.locator('.tile[data-id="asumi"] .tile__trigger').click();
     await page.locator('.tile[data-id="asumi"] .tile__trigger').click();
+    await page.waitForFunction(()=>document.querySelectorAll(".tile[data-id=asumi] a[href*=github.com]").length===1);
     assert.equal(await page.locator('.tile[data-id="asumi"] a[href*="github.com"]').count(),1,"Public source");
     if(width===390||width===1440){
       await page.locator("#theme-switch").click();
