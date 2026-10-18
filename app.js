@@ -3,7 +3,7 @@
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const SETTINGS_KEY = "hoenmike-portfolio-preferences-v1";
-const themes = ["dark", "light", "oled"];
+const themes = ["dark", "light"];
 const languageNames = { vi: "Tiếng Việt", en: "English" };
 const safeRead = () => { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"); } catch { return {}; } };
 const settings = safeRead();
@@ -18,11 +18,12 @@ const copy = {
   vi: {
     navWork:"Projects",navJourney:"Journey",navAbout:"About",heroEyebrow:"Một góc nhỏ trên Internet",
     heroLine1:"Hey, mình là",heroSubtitle:"Mình thích biến những ý tưởng ngẫu hứng thành những thứ có thể dùng, chơi và khám phá.",
+    heroAside:"Code một chút. Chơi một chút. Rồi lại làm ra thứ gì đó.",stripLead:"ĐANG MÊ MẨN",stripGames:"Những thế giới nhỏ",stripAI:"AI có cá tính",stripTools:"Công cụ hữu ích",stripIdeas:"Những ý tưởng hơi kỳ",workInstruction:"NHẤN VÀO CARD ĐỂ MỞ RA ↗",
     exploreWork:"Khám phá dự án",heroFoot:"Developer · Creative coder · Curious human",scroll:"Cuộn để khám phá ↓",
-    workEyebrow:"THỨ MÌNH LÀM",workTitle:"Selected",workTitleAccent:"work.",workDescription:"Từ game đến AI và những công cụ nho nhỏ. Chạm vào mỗi ô để khám phá ngay tại đây.",
+    workEyebrow:"THE PLAYGROUND",workTitle:"Mấy thứ",workTitleAccent:"mình làm.",workDescription:"Không chỉ là code. Đây là những thứ mình muốn tự tay biến thành sản phẩm — từ một game nhỏ đến công cụ dùng mỗi ngày.",
     projectCount:"dự án được chọn",filterAll:"Tất cả",filterGames:"Games",filterApps:"Apps & Tools",
     projectsHint:"Một số dự án là private — mình chỉ chia sẻ những gì có thể công khai.",
-    journeyEyebrow:"HÀNH TRÌNH",journeyTitle:"Still",journeyAccent:"figuring it out.",
+    journeyEyebrow:"HÀNH TRÌNH",journeyTitle:"Từ tò mò đến",journeyAccent:"tự tay xây dựng.",
     journeyDescription:"Không phải đường thẳng. Chỉ là một chuỗi những lần tò mò, thử, sai và làm tốt hơn.",
     experienceEyebrow:"BEHIND THE SCENES",experienceTitle:"Things I learned by building.",
     experienceIntro:"Từ bài tập đầu tiên đến sản phẩm phức tạp hơn — mỗi dự án là một bài học riêng.",
@@ -33,16 +34,17 @@ const copy = {
     findGithub:"Gặp mình trên GitHub",footerMade:"Made with curiosity, not a template.",backToTop:"Lên đầu ↑",
     details:"Tổng quan",stack:"Công nghệ",notes:"Ghi chú",demo:"Xem demo",source:"Mã nguồn",expand:"Mở rộng",collapse:"Thu gọn",
     private:"Private project",public:"Open source",thesis:"Graduation thesis",built:"Dự án",current:"Đang phát triển",
-    themeDark:"Dark",themeLight:"Light",themeOled:"OLED",themeAria:"Đổi giao diện màu",
+    themeDark:"Dark",themeLight:"Light",themeAria:"Đổi giao diện màu",
   },
   en: {
     navWork:"Projects",navJourney:"Journey",navAbout:"About",heroEyebrow:"A little corner of the Internet",
     heroLine1:"Hey, I'm",heroSubtitle:"I like turning random ideas into things you can use, play with, and explore.",
+    heroAside:"A little code. A little play. A lot of curiosity.",stripLead:"CURRENT OBSESSIONS",stripGames:"Little worlds",stripAI:"AI with personality",stripTools:"Useful tools",stripIdeas:"Slightly weird ideas",workInstruction:"TAP A CARD TO UNFOLD ↗",
     exploreWork:"Explore my work",heroFoot:"Developer · Creative coder · Curious human",scroll:"Scroll to explore ↓",
-    workEyebrow:"THINGS I MAKE",workTitle:"Selected",workTitleAccent:"work.",workDescription:"Games, AI companions, and useful little tools. Tap a tile to expand it right here.",
+    workEyebrow:"THE PLAYGROUND",workTitle:"Things I've",workTitleAccent:"built.",workDescription:"Not just code. A collection of little worlds, AI companions, and tools I wanted to make real.",
     projectCount:"selected projects",filterAll:"All",filterGames:"Games",filterApps:"Apps & Tools",
     projectsHint:"Some projects are private — only approved, public-friendly details are shared here.",
-    journeyEyebrow:"THE JOURNEY",journeyTitle:"Still",journeyAccent:"figuring it out.",
+    journeyEyebrow:"THE JOURNEY",journeyTitle:"Learning by",journeyAccent:"making things.",
     journeyDescription:"It's not a straight line. Just curiosity, experiments, mistakes, and learning to build better.",
     experienceEyebrow:"BEHIND THE SCENES",experienceTitle:"Things I learned by building.",
     experienceIntro:"From early school projects to more ambitious work — every build taught me something.",
@@ -53,7 +55,7 @@ const copy = {
     findGithub:"Find me on GitHub",footerMade:"Made with curiosity, not a template.",backToTop:"Back to top ↑",
     details:"Overview",stack:"Built with",notes:"Good to know",demo:"Live demo",source:"Source code",expand:"Expand",collapse:"Collapse",
     private:"Private project",public:"Open source",thesis:"Graduation thesis",built:"Project",current:"Work in progress",
-    themeDark:"Dark",themeLight:"Light",themeOled:"OLED",themeAria:"Change color theme",
+    themeDark:"Dark",themeLight:"Light",themeAria:"Change color theme",
   }
 };
 
@@ -76,7 +78,7 @@ const projects = [
     note:{vi:"Mã nguồn công khai; nhiều tính năng được bổ sung dần qua các phiên bản.",en:"Public source; continuously evolving through small releases."}
   },
   {
-    id:"miraei",size:"medium",kind:"ai",year:"2026",title:"Miraei",visibility:"private",
+    id:"miraei",size:"wide",kind:"ai",year:"2026",title:"Miraei",visibility:"private",
     category:{vi:"AI / SECOND BRAIN",en:"AI / SECOND BRAIN"},
     tagline:{vi:"Để ý tưởng không bị thất lạc.",en:"A second brain for everyday ideas."},
     description:{vi:"Một trợ lý Telegram giúp ghi nhớ, tổ chức ý tưởng, tìm kiếm thông tin và nhắc việc. Được xây để việc lưu trữ và quay lại với ý tưởng trở nên tự nhiên hơn.",en:"A Telegram-based assistant to capture ideas, remember context, search information and manage reminders — a small experiment in making everyday knowledge easier to revisit."},
@@ -84,7 +86,7 @@ const projects = [
     note:{vi:"Bot cá nhân; mã nguồn và dữ liệu được giữ riêng tư.",en:"Personal assistant; source code and personal data remain private."}
   },
   {
-    id:"sc",size:"wide",kind:"app",year:"2025 — now",title:"Project SC",visibility:"private",
+    id:"sc",size:"medium",kind:"app",year:"2025 — now",title:"Project SC",visibility:"private",
     category:{vi:"PRIVATE VENTURE",en:"PRIVATE VENTURE"},
     tagline:{vi:"Một dự án độc lập đang lớn dần.",en:"An independent project taking shape."},
     description:{vi:"Một dự án phần mềm độc lập mà mình đang tham gia phát triển. Hiện tại mình chỉ chia sẻ tên gọi và giới thiệu ở mức tổng quan.",en:"An independent software project I'm helping build. For now, I'm keeping the introduction intentionally brief."},
@@ -173,7 +175,8 @@ function renderOne(project, index) {
     '<button class="tile__trigger" type="button" aria-expanded="false" aria-controls="detail-' + id + '" aria-label="' + esc(c.expand + " " + project.title) + '">' +
       '<div class="tile__visual" aria-hidden="true">' + visual[project.id] + '</div>' +
       '<div class="tile__top"><span class="tile__number">' + number + ' / ' + year + '</span><span class="tile__arrow" aria-hidden="true">↗</span></div>' +
-      '<div class="tile__bottom"><p class="tile__category">' + esc(localized(project.category)) + '</p><h3 class="tile__title">' + esc(project.title) + '</h3><p class="tile__subtitle">' + esc(localized(project.tagline)) + '</p></div>' +
+      '<div class="tile__bottom"><p class="tile__category">' + esc(localized(project.category)) + '</p><h3 class="tile__title">' + esc(project.title) + '</h3><p class="tile__subtitle">' + esc(localized(project.tagline)) + '</p>' +
+    (project.size !== "standard" ? '<div class="tile__mini-stack" aria-hidden="true">' + project.tech.slice(0, 2).map((t) => '<span>' + esc(t) + '</span>').join("") + '</div>' : "") + '</div>' +
     '</button>' +
     '<div class="tile__detail" id="detail-' + id + '" hidden role="region" aria-label="' + esc(project.title + " " + c.details) + '">' +
       '<div class="tile__detail-grid"><div><span class="detail-label">' + esc(c.details) + '</span><p class="detail-copy">' + esc(localized(project.description)) + '</p></div>' +
@@ -197,8 +200,8 @@ function applyTranslations() {
 function applyTheme() {
   document.documentElement.dataset.theme = theme;
   const meta = $('meta[name="theme-color"]');
-  if (meta) meta.content = theme === "light" ? "#f4f4ee" : theme === "oled" ? "#000000" : "#0d0f14";
-  const label = theme === "light" ? copy[lang].themeLight : theme === "oled" ? copy[lang].themeOled : copy[lang].themeDark;
+  if (meta) meta.content = theme === "light" ? "#f4f4ee" : "#0d0f14";
+  const label = theme === "light" ? copy[lang].themeLight : copy[lang].themeDark;
   $(".theme-switch__label").textContent = label;
   $("#theme-switch").setAttribute("aria-label", copy[lang].themeAria + ": " + label);
   $("#theme-switch").title = label;
@@ -222,6 +225,7 @@ function renderProjects() {
   const selected = projects.filter((p) => filter === "all" || p.kind === filter);
   $("#project-grid").innerHTML = selected.map(renderOne).join("");
   $("#project-count").textContent = String(selected.length).padStart(2,"0");
+  $("[data-count-for]").forEach((el) => { el.textContent = String(el.dataset.countFor === "all" ? projects.length : projects.filter((p) => p.kind === el.dataset.countFor).length).padStart(2, "0"); });
   syncTiles();
   $$(".tile__trigger", $("#project-grid")).forEach((trigger) => {
     trigger.addEventListener("click", () => {

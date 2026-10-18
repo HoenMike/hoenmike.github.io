@@ -48,18 +48,27 @@
           <div class="hero__text">
             <h1 id="hero-title"><span data-i18n="heroLine1">Hey, mình là</span><br><span class="hero__name">HoenMike<span class="hero__period">.</span></span></h1>
             <p class="hero__subtitle" data-i18n="heroSubtitle">Mình thích biến những ý tưởng ngẫu hứng thành những thứ có thể dùng, chơi và khám phá.</p>
+            <p class="hero__aside" data-i18n="heroAside">Code một chút. Chơi một chút. Rồi lại làm ra thứ gì đó.</p>
             <div class="hero__cta">
               <a class="button button--primary" href="#work"><span data-i18n="exploreWork">Khám phá dự án</span><span aria-hidden="true">↗</span></a>
               <a class="button button--quiet" href="https://github.com/HoenMike" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span aria-hidden="true">↗</span></a>
             </div>
           </div>
-          <div class="hero__art" aria-hidden="true">
-            <div class="art-orbit art-orbit--outer"></div>
-            <div class="art-orbit art-orbit--inner"></div>
-            <div class="art-asterisk">✳</div>
-            <div class="art-chip art-chip--top"><span class="chip-led"></span> imagination.exe</div>
-            <div class="art-chip art-chip--bottom">always building <span>↗</span></div>
-            <span class="art-star art-star--one">✦</span><span class="art-star art-star--two">✧</span>
+          <div class="hero__studio" aria-hidden="true">
+            <div class="studio__orbit"></div>
+            <div class="studio__window">
+              <div class="studio__toolbar"><span class="studio__traffic"><i></i><i></i><i></i></span><span>little-ideas / playground</span><span class="studio__toolbar-arrow">↗</span></div>
+              <div class="studio__scene">
+                <span class="studio__scene-caption">A SMALL WORLD IN PROGRESS / 001</span>
+                <span class="studio__sun"></span><span class="studio__hill studio__hill--back"></span><span class="studio__hill studio__hill--front"></span>
+                <span class="studio__sprout studio__sprout--one">✳</span><span class="studio__sprout studio__sprout--two">✳</span>
+                <span class="studio__scene-label">make something<br><strong>feel alive.</strong></span>
+              </div>
+              <div class="studio__window-foot"><span><i></i> EXPERIMENT IN PROGRESS</span><span>10 PROJECTS ↗</span></div>
+            </div>
+            <div class="studio__note studio__note--upper"><span>✦</span> idea → prototype → repeat</div>
+            <div class="studio__note studio__note--lower"><span class="studio__note-led"></span> curiosity.js <span>● running</span></div>
+            <span class="studio__spark studio__spark--one">✧</span><span class="studio__spark studio__spark--two">+</span>
           </div>
         </div>
         <div class="hero__foot">
@@ -68,6 +77,8 @@
         </div>
       </section>
 
+      <div class="interest-strip" aria-label="Interests"><span class="interest-strip__lead" data-i18n="stripLead">ĐANG MÊ MẨN</span><span class="interest-strip__divider">✳</span><span data-i18n="stripGames">Những thế giới nhỏ</span><span class="interest-strip__divider">✳</span><span data-i18n="stripAI">AI có cá tính</span><span class="interest-strip__divider">✳</span><span data-i18n="stripTools">Công cụ hữu ích</span><span class="interest-strip__divider">✳</span><span data-i18n="stripIdeas">Những ý tưởng hơi kỳ</span></div>
+
       <section class="work-section section" id="work" aria-labelledby="work-title">
         <div class="section-heading">
           <div>
@@ -75,13 +86,16 @@
             <h2 id="work-title"><span data-i18n="workTitle">Selected</span> <em data-i18n="workTitleAccent">work.</em></h2>
             <p class="section-heading__description" data-i18n="workDescription">Từ game đến AI và những công cụ nho nhỏ. Chạm vào mỗi ô để khám phá ngay tại đây.</p>
           </div>
-          <div class="work-count"><span class="work-count__number" id="project-count">10</span><span data-i18n="projectCount">dự án được chọn</span></div>
+          <div class="work-count"><span class="work-count__number" id="project-count">10</span><span data-i18n="projectCount">dự án được chọn</span><span class="work-count__asterisk" aria-hidden="true">✳</span></div>
         </div>
-        <div class="filter-bar" id="filter-bar" role="group" aria-label="Project filter">
-          <button type="button" class="filter is-active" data-filter="all" aria-pressed="true" data-i18n="filterAll">Tất cả</button>
-          <button type="button" class="filter" data-filter="game" aria-pressed="false" data-i18n="filterGames">Games</button>
-          <button type="button" class="filter" data-filter="ai" aria-pressed="false">AI</button>
-          <button type="button" class="filter" data-filter="app" aria-pressed="false" data-i18n="filterApps">Apps & Tools</button>
+        <div class="filter-row">
+          <div class="filter-bar" id="filter-bar" role="group" aria-label="Project filter">
+            <button type="button" class="filter is-active" data-filter="all" aria-pressed="true"><span data-i18n="filterAll">Tất cả</span><span class="filter__count" data-count-for="all"></span></button>
+            <button type="button" class="filter" data-filter="game" aria-pressed="false"><span data-i18n="filterGames">Games</span><span class="filter__count" data-count-for="game"></span></button>
+            <button type="button" class="filter" data-filter="ai" aria-pressed="false"><span>AI</span><span class="filter__count" data-count-for="ai"></span></button>
+            <button type="button" class="filter" data-filter="app" aria-pressed="false"><span data-i18n="filterApps">Apps & Tools</span><span class="filter__count" data-count-for="app"></span></button>
+          </div>
+          <span class="work-instruction" data-i18n="workInstruction">NHẤN VÀO CARD ĐỂ MỞ RA ↗</span>
         </div>
         <div class="bento-grid" id="project-grid" aria-live="polite"></div>
         <p class="projects-hint"><span class="hint-sparkle">✳</span> <span data-i18n="projectsHint">Một số dự án là private — mình chỉ chia sẻ những gì có thể công khai.</span></p>
