@@ -47,7 +47,7 @@ test("public project allowlist and all ten showcase items survive unchanged",()=
 test("interactive features have accessible and stable event handlers",()=>{
  assert.match(js,/querySelectorAll/);
  assert.match(js,/const \$\$ =/);
- assert.doesNotMatch(js,/\$\([^)]*\)\.forEach\(/);
+ assert.doesNotMatch(js,/(?<!\$)\$\([^)]*\)\.forEach\(/);
  assert.match(js,/grid\.addEventListener\("click"/);
  assert.match(js,/aria-expanded/);
  assert.match(js,/aria-controls/);
