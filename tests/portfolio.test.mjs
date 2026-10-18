@@ -49,3 +49,15 @@ test("Interactive features and themes exist", () => {
   assert.match(css, /max-width:600px/);
   assert.match(css, /tile\.is-expanded/);
 });
+
+test("Editorial refresh keeps a bespoke hero and readable project discovery", () => {
+  assert.match(html, /class="hero__studio"/);
+  assert.match(html, /class="studio__window"/);
+  assert.match(html, /class="interest-strip"/);
+  assert.match(html, /data-count-for="all"/);
+  assert.match(js, /heroAside:/);
+  assert.match(js, /workInstruction:/);
+  assert.match(js, /project\.tech\.slice\(0, 2\)/);
+  assert.match(css, /\.hero__studio\{/);
+  assert.match(css, /\.tile__mini-stack/);
+});
