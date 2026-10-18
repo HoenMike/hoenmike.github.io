@@ -306,22 +306,7 @@ applyTheme();
 renderProjects();
 renderTimeline();
 
-/* Animation as feedback, never an obstacle to reading. */
-if("IntersectionObserver" in window && !reduceMotion.matches){
-  const observer=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(!entry.isIntersecting)return;
-      entry.target.classList.add("is-visible");
-      observer.unobserve(entry.target);
-    });
-  },{rootMargin:"0px 0px -25px 0px",threshold:.08});
-  $$(".section-heading,.experience-card,.outro-card").forEach(el=>{
-    if(el.getBoundingClientRect().top>window.innerHeight){
-      el.classList.add("reveal-ready");
-      observer.observe(el);
-    }
-  });
-}
+/* All sections stay visible immediately. No scroll-hidden content. */
 /* Low-impact local spotlight: no pointer tracking or 3D tilt on mobile. */
 if(window.matchMedia("(hover: hover) and (pointer: fine)").matches&&!reduceMotion.matches){
   grid.addEventListener("pointermove",event=>{
