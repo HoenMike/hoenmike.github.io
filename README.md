@@ -2,21 +2,20 @@
 
 An interactive personal landing page: a living collection of projects and experiments.
 
-## Preview and release
+## Release
 
-- Production: https://hoenmike.github.io/ (main, unchanged while this branch is under review).
-- Review branch: feat/seamless-bento-portfolio
-- Staging: https://hoenmike-bento-preview.hoanggg003.workers.dev/
-- Staging is a separately deployed Cloudflare Worker containing a snapshot of this branch. Changes to this branch do not automatically update staging.
-- Do not merge to main until browser QA and stakeholder review are complete.
+- Live site: https://hoenmike.github.io/ (GitHub Pages on `main`).
+- This portfolio uses a simple static deployment; push or merge to `main` to release.
+- Run `node --check app.js` and `node --test tests/*.test.mjs` before shipping.
 
 ## Experience
 
 - 12-column asymmetric Bento grid with larger featured tiles and smaller project cards.
+- Editorial hero with a hand-built miniature project workspace, interests strip and clearer project discovery.
 - Inline expansion: click or tap a tile to grow it in place. No route change or modal.
 - Native View Transitions API when supported; safe fallback; Escape collapses the tile.
 - Project filters: All / Games / AI / Apps & Tools.
-- Vietnamese / English and Dark / Light / OLED Black, saved to browser storage.
+- Vietnamese / English and Dark / Light, saved to browser storage.
 - CSS-drawn art, responsive layouts, reduced-motion support.
 - Timeline and Experience card including ChillTown.
 
@@ -49,4 +48,4 @@ Before production verify card open/close and Escape, filters, VI/EN, every theme
 
 ## Stack
 
-Semantic HTML, modern CSS Grid, responsive layouts, custom illustrations, JavaScript modules, View Transitions, Web Storage, a Cloudflare Worker preview, GitHub Pages and Node built-in tests. No unnecessary client framework or bundle.
+Semantic HTML, modern CSS Grid, responsive layouts, custom illustrations, JavaScript modules, View Transitions, Web Storage, GitHub Pages and Node built-in tests. No unnecessary client framework or bundle.

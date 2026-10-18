@@ -3,7 +3,7 @@
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const SETTINGS_KEY = "hoenmike-portfolio-preferences-v1";
-const themes = ["dark", "light", "oled"];
+const themes = ["dark", "light"];
 const languageNames = { vi: "Tiếng Việt", en: "English" };
 const safeRead = () => { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"); } catch { return {}; } };
 const settings = safeRead();
@@ -34,7 +34,7 @@ const copy = {
     findGithub:"Gặp mình trên GitHub",footerMade:"Made with curiosity, not a template.",backToTop:"Lên đầu ↑",
     details:"Tổng quan",stack:"Công nghệ",notes:"Ghi chú",demo:"Xem demo",source:"Mã nguồn",expand:"Mở rộng",collapse:"Thu gọn",
     private:"Private project",public:"Open source",thesis:"Graduation thesis",built:"Dự án",current:"Đang phát triển",
-    themeDark:"Dark",themeLight:"Light",themeOled:"OLED",themeAria:"Đổi giao diện màu",
+    themeDark:"Dark",themeLight:"Light",themeAria:"Đổi giao diện màu",
   },
   en: {
     navWork:"Projects",navJourney:"Journey",navAbout:"About",heroEyebrow:"A little corner of the Internet",
@@ -55,7 +55,7 @@ const copy = {
     findGithub:"Find me on GitHub",footerMade:"Made with curiosity, not a template.",backToTop:"Back to top ↑",
     details:"Overview",stack:"Built with",notes:"Good to know",demo:"Live demo",source:"Source code",expand:"Expand",collapse:"Collapse",
     private:"Private project",public:"Open source",thesis:"Graduation thesis",built:"Project",current:"Work in progress",
-    themeDark:"Dark",themeLight:"Light",themeOled:"OLED",themeAria:"Change color theme",
+    themeDark:"Dark",themeLight:"Light",themeAria:"Change color theme",
   }
 };
 
@@ -200,8 +200,8 @@ function applyTranslations() {
 function applyTheme() {
   document.documentElement.dataset.theme = theme;
   const meta = $('meta[name="theme-color"]');
-  if (meta) meta.content = theme === "light" ? "#f4f4ee" : theme === "oled" ? "#000000" : "#0d0f14";
-  const label = theme === "light" ? copy[lang].themeLight : theme === "oled" ? copy[lang].themeOled : copy[lang].themeDark;
+  if (meta) meta.content = theme === "light" ? "#f4f4ee" : "#0d0f14";
+  const label = theme === "light" ? copy[lang].themeLight : copy[lang].themeDark;
   $(".theme-switch__label").textContent = label;
   $("#theme-switch").setAttribute("aria-label", copy[lang].themeAria + ": " + label);
   $("#theme-switch").title = label;

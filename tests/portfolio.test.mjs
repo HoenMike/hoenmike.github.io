@@ -42,7 +42,10 @@ test("Required portfolio milestones are represented", () => {
 });
 
 test("Interactive features and themes exist", () => {
-  for (const value of ["dark", "light", "oled"]) assert.ok(js.includes('"' + value + '"'));
+  for (const value of ["dark", "light"]) assert.ok(js.includes('"' + value + '"'));
+  assert.match(js, /const themes = \["dark", "light"\]/);
+  assert.doesNotMatch(js, /themeOled|theme === "oled"/);
+  assert.doesNotMatch(css, /data-theme=oled/);
   assert.match(js, /startViewTransition/);
   assert.match(js, /Escape/);
   assert.match(css, /prefers-reduced-motion/);

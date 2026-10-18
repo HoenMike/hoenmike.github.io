@@ -5,7 +5,6 @@
   --accent:#d7fa83;--shadow:0 22px 65px rgba(0,0,0,.24);--radius:23px;--page:1192px;
 }
 html[data-theme=light]{color-scheme:light;--bg:#f4f4ee;--surface:#fff;--surface-2:#f0f0e8;--text:#1b1e22;--muted:#646b73;--line:rgba(22,29,40,.15);--accent:#7f9849;--shadow:0 20px 55px rgba(25,35,35,.1)}
-html[data-theme=oled]{color-scheme:dark;--bg:#000;--surface:#080808;--surface-2:#101010;--text:#fafafa;--muted:#a5a5a5;--line:rgba(255,255,255,.17);--accent:#d9ff81;--shadow:0 22px 65px rgba(0,0,0,.4)}
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:105px}
 body{margin:0;min-width:320px;background:var(--bg);color:var(--text);font-family:"DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background-color .35s,color .35s}
@@ -18,7 +17,6 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-off
 .ambient{position:absolute;pointer-events:none;z-index:-1;border-radius:50%;filter:blur(115px)}
 .ambient--one{top:10rem;right:-9rem;width:400px;height:400px;background:rgba(138,159,118,.12)}
 .ambient--two{top:63rem;left:-12rem;width:370px;height:370px;background:rgba(107,97,182,.09)}
-html[data-theme=oled] .ambient{display:none}
 .site-shell{width:min(calc(100% - 64px),var(--page));margin:auto}
 .site-header{height:97px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;z-index:10}
 .brand{display:inline-flex;align-items:center;gap:12px;font-family:"Space Grotesk",sans-serif;font-size:23px;font-weight:700;letter-spacing:-1.6px}
@@ -131,16 +129,6 @@ html[data-theme=oled] .ambient{display:none}
 .tile--asumi .tile__bottom{max-width:82%}
 .tile--garden.is-expanded .tile__bottom{max-width:82%}
 html[data-theme=light] .tile{box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
-html[data-theme=oled] .tile--garden{background:#08211b}
-html[data-theme=oled] .tile--asumi{background:#171123}
-html[data-theme=oled] .tile--miraei{background:#101629}
-html[data-theme=oled] .tile--sc{background:#0d1016}
-html[data-theme=oled] .tile--clock{background:#18210d}
-html[data-theme=oled] .tile--alpha{background:#0d1b26}
-html[data-theme=oled] .tile--zinit{background:#27131a}
-html[data-theme=oled] .tile--elo{background:#0c201f}
-html[data-theme=oled] .tile--dino{background:#1d211a}
-html[data-theme=oled] .tile--tak{background:#1d1425}
 /* Each tile carries an original CSS illustration — no leaked private screenshots. */
 .garden-sun{position:absolute;right:13%;top:11%;width:125px;height:125px;border-radius:50%;background:#ddff9d;box-shadow:0 0 65px rgba(218,255,151,.45)}
 .garden-hill{position:absolute;width:118%;height:64%;border-radius:50% 50% 0 0;bottom:-36%;right:-34%;background:#407a57;transform:rotate(-13deg)}
@@ -355,8 +343,6 @@ html[data-theme=oled] .tile--tak{background:#1d1425}
 .outro-card h2{max-width:790px}
 .outro-card__sticker{font-size:110px}
 .site-footer{border-top:1px solid var(--line);margin-top:45px}
-html[data-theme=oled] .site-header{background:rgba(0,0,0,.91)}
-html[data-theme=oled] .hero::before{background:none}
 html[data-theme=light] .hero__studio .studio__note{box-shadow:0 10px 35px rgba(0,0,0,.1)}
 @media(max-width:1050px){
   .hero__layout{grid-template-columns:minmax(0,1fr) minmax(310px,.85fr);gap:10px}
