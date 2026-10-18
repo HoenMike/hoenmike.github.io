@@ -144,19 +144,6 @@ const projects = [
   }
 ];
 
-const retiredVisual = {
-  garden:'<div class="garden-sun"></div><div class="garden-hill garden-hill--back"></div><div class="garden-hill"></div><div class="garden-bed"></div><span class="garden-sprout" style="--right:30%;--bottom:24%">🌱</span><span class="garden-sprout" style="--right:19%;--bottom:20%">🌿</span><span class="garden-sprout" style="--right:10%;--bottom:23%">🌱</span>',
-  asumi:'<div class="asumi-orbit"></div><div class="asumi-orbit asumi-orbit--two"></div><div class="asumi-core">✳</div>',
-  miraei:'<div class="miraei-moon"></div><span class="miraei-star" style="--right:14%;--top:13%">✦</span><span class="miraei-star" style="--right:55%;--top:24%">✧</span><span class="miraei-star" style="--right:40%;--top:56%">✧</span>',
-  sc:'<div class="sc-emblem"><span class="sc-monogram">SC</span></div>',
-  clock:'<div class="clock-board"><div><b>BÂY</b>GIỜLÀ</div><div>KHÔNGBẢY</div><div><b>MƯỜI</b>HAI</div><div>PHÚT<span>·</span><b>RƯỠI</b></div></div>',
-  alpha:'<div class="alpha-window"><div class="alpha-dots"><i></i><i></i><i></i></div><div class="alpha-bars"><span style="--h:42%"></span><span style="--h:65%"></span><span style="--h:52%"></span><span style="--h:81%"></span><span style="--h:71%"></span><span style="--h:95%"></span></div></div>',
-  zinit:'<div class="zinit-phone"><strong>Today.</strong><span class="zinit-task"></span><span class="zinit-task"></span><span class="zinit-task"></span></div>',
-  elo:'<div class="elo-circle"></div><span class="elo-shuttle">🏸</span>',
-  dino:'<span class="dino-land">🦖</span><div class="dino-ground"></div><span class="dino-cactus">♣</span>',
-  tak:'<div class="tak-board"><span class="tak-cell">○</span><span class="tak-cell"></span><span class="tak-cell">●</span><span class="tak-cell">●</span><span class="tak-cell">○</span><span class="tak-cell"></span><span class="tak-cell"></span><span class="tak-cell">●</span><span class="tak-cell">○</span></div>'
-};
-
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const localized = (entry) => typeof entry === "string" ? entry : (entry?.[lang] || "");
 const trustedExternal = (url) => typeof url === "string" && url.startsWith("https://");
@@ -481,7 +468,7 @@ function initScrollStory() {
   }
   function attach() {
     if(!observer || reduceMotion.matches)return;
-    const elements=$$(".section-heading,.tile,.timeline-item,.experience-card,.outro-card");
+    const elements=$(".section-heading,.tile__trigger,.timeline-item,.experience-card,.outro-card");
     elements.forEach((el,i) => {
       if(el.dataset.revealObserved || el.classList.contains("is-revealed"))return;
       el.dataset.revealObserved="true";
@@ -489,7 +476,7 @@ function initScrollStory() {
         el.classList.add("is-revealed");
         return;
       }
-      if(el.matches(".tile")) el.style.setProperty("--reveal-delay",Math.min(i%4,3)*55+"ms");
+      if(el.matches(".tile__trigger")) el.style.setProperty("--reveal-delay",Math.min(i%4,3)*55+"ms");
       el.classList.add("reveal-pending");
       observer.observe(el);
     });

@@ -60,3 +60,26 @@ test("Journey content remains rendered and visible in the clean layout", () => {
   assert.doesNotMatch(css, /\.timeline\s*\{[^}]*display\s*:\s*none/);
   assert.doesNotMatch(css, /\.timeline-item\s*\{[^}]*opacity\s*:\s*0/);
 });
+
+test("Midnight Ocean uses only two fonts and one navy/cyan palette", () => {
+  assert.match(css, /--bg:\s*#020b14/);
+  assert.match(css, /--accent:\s*#78dcef/);
+  assert.match(css, /--tile-bg:\s*#102b3c/);
+  assert.doesNotMatch(html, /Space\+Mono/);
+  assert.match(html, /href="\.\/icon\.svg"/);
+  assert.doesNotMatch(js, /const retiredVisual/);
+  assert.match(js, /\.tile__trigger,\.timeline-item/);
+});
+test("Atmosphere and animation have explicit low-motion and visibility safeguards", () => {
+  assert.match(html, /id="starfield"/);
+  assert.match(html, /sea-wave--far/);
+  assert.match(html, /sea-wave--middle/);
+  assert.match(html, /sea-wave--near/);
+  assert.match(js, /Math\.min\(window\.devicePixelRatio \|\| 1, 2\)/);
+  assert.match(js, /mobile\.matches \? 60 : 160/);
+  assert.match(js, /document\.visibilityState === "visible"/);
+  assert.match(js, /IntersectionObserver/);
+  assert.match(js, /cancelAnimationFrame/);
+  assert.match(css, /prefers-reduced-motion:reduce/);
+  assert.match(css, /tile\.is-filter-leaving/);
+});

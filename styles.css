@@ -51,9 +51,9 @@ html[data-theme="light"] .galaxy-layer--three { opacity:0 }
 .site-shell { width:min(calc(100% - 64px),var(--page));margin:auto;position:relative;z-index:1 }
 .site-header { min-height:95px;display:flex;align-items:center;gap:24px;position:relative;z-index:12;border-bottom:1px solid var(--line) }
 .brand { display:inline-flex;align-items:center;gap:12px;font:700 23px "Space Grotesk",sans-serif;letter-spacing:-.055em }
-.brand__logo { width:34px;height:34px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;transform:rotate(-7deg);position:relative }
-.brand__logo span:first-child { transform:rotate(7deg);font-size:24px }
-.brand__dot { position:absolute;top:5px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--accent-ink) }
+.brand__logo { width:34px;height:34px;border-radius:10px;background:#0c3041;display:grid;place-items:center;overflow:hidden;flex:0 0 34px }
+.brand__logo svg { width:100%;height:100%;display:block }
+html[data-theme="light"] .brand__logo { background:#103249 }
 .brand__period,.footer-brand span,.hero__period { color:var(--accent) }
 .desktop-nav { display:flex;align-items:center;gap:32px;margin-left:auto;margin-right:32px }
 .desktop-nav a,.header-control { color:var(--muted);font-size:14px;font-weight:600 }
@@ -344,4 +344,11 @@ html[data-theme="light"] .hero__reflection { background:linear-gradient(180deg,r
 @media(prefers-reduced-motion:reduce) {
   .reveal-pending,.is-revealed { opacity:1!important;transform:none!important;transition:none!important }
   .timeline::before { transform:scaleY(1)!important }
+}
+
+/* Reveal happens on tile content, leaving the outer card free for pointer tilt. */
+.tile__trigger.reveal-pending { opacity:0;transform:translate3d(0,20px,0) }
+.tile__trigger.is-revealed { opacity:1;transform:translate3d(0,0,0) }
+@media(hover:none),(pointer:coarse) {
+  .tile::before,.tile::after { display:none!important }
 }
