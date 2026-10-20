@@ -342,7 +342,7 @@ $("#theme-switch").addEventListener("click",()=>{
   theme=themes[(themes.indexOf(theme)+1)%themes.length];
   save();applyTheme();
 });
-$(".filter").forEach(button=>button.addEventListener("click",()=>activateFilter(button.dataset.filter)));
+$$(".filter").forEach(button=>button.addEventListener("click",()=>activateFilter(button.dataset.filter)));
 $("#reset-filter").addEventListener("click",()=>activateFilter("all"));
 grid.addEventListener("click",event=>{
   const copyButton=event.target.closest("[data-copy-project]");
