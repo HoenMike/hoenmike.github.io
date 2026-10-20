@@ -17,6 +17,7 @@
   <script src="./app.js" type="module"></script>
 </head>
 <body>
+  <a class="skip-link" href="#work" data-i18n="skipToProjects">Skip to projects</a>
   <div class="site-backdrop" aria-hidden="true"></div>
   <div class="site-shell">
     <header class="site-header" id="top">
@@ -94,7 +95,14 @@
           <button class="filter" type="button" data-filter="ai" aria-pressed="false">AI</button>
           <button class="filter" type="button" data-filter="app" aria-pressed="false" data-i18n="filterApps">Apps & Tools</button>
         </div>
-        <div id="project-grid" class="bento-grid" aria-live="polite"></div>
+        <p id="project-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+        <div id="project-grid" class="bento-grid"></div>
+        <div id="project-empty" class="empty-state" hidden>
+          <span class="empty-state__icon" aria-hidden="true">⌕</span>
+          <h3 data-i18n="emptyTitle">No projects in this category yet.</h3>
+          <p data-i18n="emptyDescription">Try viewing the full collection instead.</p>
+          <button type="button" id="reset-filter" class="button button--secondary" data-i18n="viewAllProjects">View all projects</button>
+        </div>
         <p class="projects-hint" data-i18n="projectsHint">Một số dự án là private — mình chỉ chia sẻ những gì có thể công khai.</p>
       </section>
 

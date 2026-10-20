@@ -11,7 +11,10 @@ https://hoenmike.github.io/ — GitHub Pages deploys from `main`.
 - Purpose first: introduction, actual technologies used, an interactive "currently building" panel, selected work, milestones and links to public source.
 - Restrained navy/slate with cool cyan accents. Dark/Light themes and Vietnamese/English stored in browser storage.
 - Asymmetric 12-column responsive Bento (featured and compact project cards) with original vector marks that do not expose private project information.
-- Click a project to expand its overview, technologies and notes in place. Native View Transitions where supported; keyboard Enter/Space and Escape, plus safe fallback.
+- Explore a project in place as a small case study (idea, design focus, tools, status). Native View Transitions where supported; keyboard Enter/Space and Escape, plus safe fallback.
+- Project-specific `#project-{id}` links open the correct case study directly; browser Back/Forward restores the open project. Share links can be copied, with a selectable text fallback when clipboard permission is unavailable.
+- Project filters announce result counts to assistive technology. Empty categories have a recovery path back to the full collection; skip navigation jumps directly to projects.
+- Decorative concept art distinguishes featured projects without implying fake screenshots or revealing private data.
 - Filters: All / Games / AI / Apps & Tools. Workspace projects open their matching card.
 - Background grid, gentle hover feedback and no scroll-hidden content. No literal waves, moon, starfield, continuously running canvas or additional animation libraries.
 - Reduced-motion support and visible focus states. Fonts: DM Sans and Space Grotesk only.
@@ -45,6 +48,6 @@ node --check app.js
 node --test tests/*.test.mjs
 ```
 
-Browser QA additionally verifies language/theme switching, all project filters, card expansion and Escape, timeline rendering, privacy, 320 / 390 / 768 / 1440 widths and reduced-motion using Playwright on CI. Playwright is a **test-only** dependency installed by the workflow; it is not bundled or downloaded by the production site.
+Browser QA additionally verifies language/theme switching, all project filters, card expansion and Escape, project deep links, fallback UI, timeline rendering, privacy, 320 / 390 / 768 / 1440 widths and reduced-motion using Playwright on CI. Always test actual clipboard and history behavior on a live HTTPS preview before merging. Playwright is a **test-only** dependency installed by the workflow; it is not bundled or downloaded by the production site.
 
 Before declaring Lighthouse Performance ≥90, measure it on a deployed mobile build. Syntax/unit tests and browser behavior checks alone are not Lighthouse measurements.

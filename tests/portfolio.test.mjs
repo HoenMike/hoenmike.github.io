@@ -69,3 +69,33 @@ test("language, themes and responsive behavior",()=>{
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.doesNotMatch(css,/data-theme=oled/);
 });
+
+
+test("project stories, accessible feedback and recoverable empty states",()=>{
+  assert.match(html,/id="project-status"[^>]+role="status"/);
+  assert.match(html,/id="project-empty"[^>]+hidden/);
+  assert.match(html,/id="reset-filter"/);
+  assert.match(html,/class="skip-link"/);
+  assert.match(js,/project\.focus/);
+  assert.match(js,/copyProjectLink/);
+  assert.match(js,/copyFallback/);
+  assert.match(js,/navigator\.clipboard/);
+  assert.match(js,/\.select\(\)/);
+  assert.match(js,/const getProjectFromUrl/);
+  assert.match(js,/window\.addEventListener\("popstate"/);
+  assert.match(js,/window\.addEventListener\("hashchange"/);
+  assert.match(js,/window\.history\.pushState/);
+});
+
+test("concept art stays decorative, responsive and does not leak private projects",()=>{
+  assert.match(js,/Decorative concept art, not product screenshots/);
+  assert.match(js,/projectScenes/);
+  assert.match(css,/\.visual-garden/);
+  assert.match(css,/\.visual-chat/);
+  assert.match(css,/\.visual-ideas/);
+  assert.match(css,/@media\(max-width:480px\)/);
+  assert.match(css,/\.copy-fallback/);
+  const sc=js.split('id:"sc",')[1].split('id:"clock",')[0];
+  assert.doesNotMatch(sc,/source:|demo:/);
+  assert.match(sc,/details remain private|giữ riêng tư/);
+});

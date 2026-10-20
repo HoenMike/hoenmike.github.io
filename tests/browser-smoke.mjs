@@ -52,6 +52,26 @@ try {
     }
     await context.close();
   }
+  // State and recovery checks: deep-link, Back, clipboard denial and filter feedback.
+  const journeyContext=await browser.newContext({viewport:{width:1080,height:860}});
+  const journeyPage=await journeyContext.newPage();
+  journeyPage.on("pageerror",error=>errors.push("journey: "+error.message));
+  await journeyPage.goto("http://127.0.0.1:4173/",{waitUntil:"domcontentloaded"});
+  await journeyPage.locator('.tile[data-id="garden"] .tile__trigger').click();
+  await journeyPage.waitForFunction(()=>location.hash==="#project-garden");
+  await journeyPage.goBack();
+  await journeyPage.waitForFunction(()=>document.querySelector('.tile[data-id=garden] .tile__trigger')?.getAttribute("aria-expanded")==="false");
+  await journeyPage.goto("http://127.0.0.1:4173/#project-clock",{waitUntil:"domcontentloaded"});
+  await journeyPage.waitForFunction(()=>document.querySelector('.tile[data-id=clock] .tile__trigger')?.getAttribute("aria-expanded")==="true");
+  assert.equal(await journeyPage.locator("#detail-clock").isVisible(),true,"Deep-link expands its target");
+  await journeyPage.evaluate(()=>Object.defineProperty(navigator,"clipboard",{configurable:true,value:undefined}));
+  await journeyPage.locator('.tile[data-id="clock"] .detail-copy-link').click();
+  assert.equal(await journeyPage.locator('.tile[data-id="clock"] .copy-fallback').isVisible(),true,"Clipboard failure has recovery");
+  assert.match(await journeyPage.locator('.tile[data-id="clock"] .copy-fallback input').inputValue(),/#project-clock$/);
+  await journeyPage.locator('.filter[data-filter="ai"]').click();
+  await journeyPage.waitForFunction(()=>document.querySelectorAll(".tile").length===2);
+  assert.match(await journeyPage.locator("#project-status").textContent(),/2 (dự án|projects)/);
+  await journeyContext.close();
   const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:"reduce"});
   const page=await context.newPage();
   page.on("pageerror",error=>errors.push("reduced: "+error.message));
@@ -61,5 +81,5 @@ try {
   assert.equal(await page.locator("#detail-miraei").isVisible(),true);
   await context.close();
   assert.deepEqual(errors,[],"No uncaught browser errors");
-  console.log("PASS: responsive 320,390,768,1440; themes, i18n, filters, expansion, Escape, privacy, reduced motion");
+  console.log("PASS: responsive 320,390,768,1440; themes, i18n, filters, URL history, deep links, copy fallback, expansion, Escape, privacy, reduced motion");
 } finally {await browser.close();}
